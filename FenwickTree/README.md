@@ -18,6 +18,7 @@ public FenwickTree(int n)
 長さ $n$ の配列 $a_0, a_1, \dots, a_{n-1}$を作ります. 初期値はすべて0です.
 計算量: $O(n)$
 
+<<<<<<< HEAD
 ```java
 public FenwickTree(long[] data)
 ```
@@ -25,6 +26,8 @@ public FenwickTree(long[] data)
 長さ $n$ の配列 $a_0, a_1, \dots, a_{n-1}$を `data` により初期化します. 
 計算量: $O(n)$
 
+=======
+>>>>>>> origin/master
 ## メソッド
 ### add
 ```java
