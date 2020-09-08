@@ -7,6 +7,15 @@ class FenwickTree{
         data = new long[n];
     }
 
+    /**
+     * @verified https://atcoder.jp/contests/practice2/tasks/practice2_b
+     * @submission https://atcoder.jp/contests/practice2/submissions/16580495
+     */
+    public FenwickTree(long[] data) {
+        this(data.length);
+        build(data);
+    }
+
     public void add(int p, long x){
         assert(0<=p && p<_n);
         p++;
@@ -27,5 +36,15 @@ class FenwickTree{
             r -= r&-r;
         }
         return s;
+    }
+
+    private void build(long[] dat) {
+        System.arraycopy(dat, 0, data, 0, _n);
+        for (int i=1; i<=_n; i++) {
+            int p = i+(i&-i);
+            if(p<=_n){
+                data[p-1] += data[i-1];
+            }
+        }
     }
 }
