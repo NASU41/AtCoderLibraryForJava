@@ -33,4 +33,4 @@ public long sum(int l, int r)
 $a_l + a_{l+1} + \dots + a_{r-1}$の値を返す. 計算量: $O(\log n)$
 
 ## 使用例
-[https://atcoder.jp/contests/practice2/submissions/16573339]
+[[https://atcoder.jp/contests/practice2/submissions/16573339]]
