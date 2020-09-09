@@ -1,4 +1,5 @@
 # クラス ModIntFactory, ModIntFactory$ModInt
+
 - - -
 
 剰余演算をサポートするクラスです.
@@ -35,7 +36,9 @@ public static void main(String[] args) {
 ```
 
 ## コンストラクタ
+
 ### ModIntFactory
+
 ```java
 public ModIntFactory(int mod)
 ```
@@ -44,19 +47,24 @@ public ModIntFactory(int mod)
 計算量: $O(1)$
 
 ### ModIntFactory$ModInt
+
 外部からコンストラクタを呼ぶことは出来ません. (呼ばないで下さい)
 
 ## メソッド
+
 ### ModIntFactory
+
 ```java
-public ModInt ModIntFactory(int value)
+public ModInt create(long value)
 ```
 
 値 `value % mod` を持つ `ModInt` を生成します.
 計算量: $O(1)$
 
 ### ModIntFactory$ModInt
+
 #### mod
+
 ```java
 public int mod()
 ```
@@ -66,6 +74,7 @@ public int mod()
 計算量: $O(1)$
 
 #### value
+
 ```java
 public int value()
 ```
@@ -75,6 +84,7 @@ public int value()
 計算量: $O(1)$
 
 #### add
+
 ```java
 public ModInt add(ModInt mi)
 ```
@@ -84,6 +94,7 @@ public ModInt add(ModInt mi)
 計算量: $O(1)$
 
 #### sub
+
 ```java
 public ModInt sub(ModInt mi)
 ```
@@ -93,6 +104,7 @@ public ModInt sub(ModInt mi)
 計算量: $O(1)$
 
 #### mul
+
 ```java
 public ModInt mul(ModInt mi)
 ```
@@ -102,6 +114,7 @@ public ModInt mul(ModInt mi)
 計算量: $O(1)$
 
 #### div
+
 ```java
 public ModInt div(ModInt mi)
 ```
@@ -111,24 +124,73 @@ public ModInt div(ModInt mi)
 計算量: $O(\log \mod)$
 
 制約
+
 - `gcd(b, mod) = 1`
 
 #### inv
+
 ```java
 public ModInt inv()
 ```
+
 `ModInt a` に対して, `(a * x) % mod = 1` を満たす値 `x` を持つ `ModInt` を新たに生成します (`a` の値は書き換わりません).
 
 計算量: $O(\log \rm{mod})$
 
 制約
+
 - `gcd(a, mod) = 1`
 
 #### pow
+
 ```java
 public ModInt pow(long n)
 ```
 
-`(a ^ n) % mod ` を満たす値 `x` を持つ `ModInt` を新たに生成します (`a` の値は書き換わりません).
+`(a ^ n) % mod` を満たす値 `x` を持つ `ModInt` を新たに生成します (`a` の値は書き換わりません).
 
 計算量: $O(\log n)$
+
+#### addAsg
+
+```java
+public ModInt addAsg(ModInt mi)
+```
+
+`a += b` を行います. `a` の値は書き換えられます.
+
+計算量: $O(1)$
+
+#### subAsg
+
+```java
+public ModInt subAsg(ModInt mi)
+```
+
+`a -= b` を行います. `a` の値は書き換えられます.
+
+計算量: $O(1)$
+
+#### mulAsg
+
+```java
+public ModInt mulAsg(ModInt mi)
+```
+
+`a *= b` を行います. `a` の値は書き換えられます.
+
+計算量: $O(1)$
+
+#### divAsg
+
+```java
+public ModInt divAsg(ModInt mi)
+```
+
+`a *= b^(-1)` を行います (`a /= b`). `a` の値は書き換えられます. ただし，`b^(-1)` は `(b * x) % mod = 1` を満たす `x` です.
+
+計算量: $O(\log \mod)$
+
+制約
+
+- `gcd(b, mod) = 1`

@@ -1,3 +1,10 @@
+/**
+ * @verified 
+ * <ul>
+ * <li> https://atcoder.jp/contests/arc050/tasks/arc050_c
+ * <li> https://atcoder.jp/contests/abc129/tasks/abc129_f
+ * </ul>
+ */
 class ModIntFactory {
     private final ModArithmetic ma;
     private final int mod;
@@ -23,6 +30,12 @@ class ModIntFactory {
         public int mod() {
             return mod;
         }
+        public int value() {
+            if (ma instanceof ModArithmetic.ModArithmeticMontgomery) {
+                return ((ModArithmetic.ModArithmeticMontgomery) ma).reduce(value);
+            }
+            return value;
+        }
         public ModInt add(ModInt mi) {
             return new ModInt(ma.add(value, mi.value));
         }
@@ -41,11 +54,21 @@ class ModIntFactory {
         public ModInt pow(long b) {
             return new ModInt(ma.pow(value, b));
         }
-        public int value() {
-            if (ma instanceof ModArithmetic.ModArithmeticMontgomery) {
-                return ((ModArithmetic.ModArithmeticMontgomery) ma).reduce(value);
-            }
-            return value;
+        public ModInt addAsg(ModInt mi) {
+            this.value = ma.add(value, mi.value);
+            return this;
+        }
+        public ModInt subAsg(ModInt mi) {
+            this.value = ma.sub(value, mi.value);
+            return this;
+        }
+        public ModInt mulAsg(ModInt mi) {
+            this.value = ma.mul(value, mi.value);
+            return this;
+        }
+        public ModInt divAsg(ModInt mi) {
+            this.value = ma.div(value, mi.value);
+            return this;
         }
         @Override
         public String toString() {
@@ -151,7 +174,8 @@ class ModIntFactory {
             public int pow(int a, long b) {
                 if (b < 0) throw new ArithmeticException("negative power");
                 long res = 1;
-                long pow2 = a, idx = 1;
+                long pow2 = a;
+                long idx = 1;
                 while (b > 0) {
                     long lsb = b & -b;
                     for (; lsb != idx; idx <<= 1) {
@@ -201,7 +225,8 @@ class ModIntFactory {
             public int pow(int a, long b) {
                 if (b < 0) throw new ArithmeticException("negative power");
                 long res = 1;
-                long pow2 = a, idx = 1;
+                long pow2 = a;
+                long idx = 1;
                 while (b > 0) {
                     long lsb = b & -b;
                     for (; lsb != idx; idx <<= 1) {
@@ -323,7 +348,8 @@ class ModIntFactory {
             public int pow(int a, long b) {
                 if (b < 0) throw new ArithmeticException("negative power");
                 int res = 1;
-                int pow2 = a, idx = 1;
+                int pow2 = a;
+                long idx = 1;
                 while (b > 0) {
                     long lsb = b & -b;
                     for (; lsb != idx; idx <<= 1) {
