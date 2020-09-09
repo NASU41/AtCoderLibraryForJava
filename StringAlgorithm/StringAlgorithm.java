@@ -265,4 +265,36 @@ class StringAlgorithm {
 	public static int[] lcpArray(java.lang.String s, int[] sa) {
 		return lcpArray(s.toCharArray(), sa);
 	}
+
+	public static int[] zAlgorithm(int[] s) {
+		int n = s.length;
+		if (n == 0) return new int[0];
+		int[] z = new int[n];
+		for (int i = 1, j = 0; i < n; i++) {
+			int k = j + z[j] <= i ? 0 : Math.min(j + z[j] - i, z[i - j]);
+			while (i + k < n && s[k] == s[i + k]) k++;
+			z[i] = k;
+			if (j + z[j] < i + z[i]) j = i;
+		}
+		z[0] = n;
+		return z;
+	}
+
+	public static int[] zAlgorithm(char[] s) {
+		int n = s.length;
+		if (n == 0) return new int[0];
+		int[] z = new int[n];
+		for (int i = 1, j = 0; i < n; i++) {
+			int k = j + z[j] <= i ? 0 : Math.min(j + z[j] - i, z[i - j]);
+			while (i + k < n && s[k] == s[i + k]) k++;
+			z[i] = k;
+			if (j + z[j] < i + z[i]) j = i;
+		}
+		z[0] = n;
+		return z;
+	}
+
+	public static int[] zAlgorithm(String s) {
+		return zAlgorithm(s.toCharArray());
+	}
 }
