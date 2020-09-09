@@ -1,7 +1,3 @@
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.function.Consumer;
-
 class StringAlgorithm {
 	private static int[] saNaive(int[] s) {
 		int n = s.length;
@@ -9,7 +5,7 @@ class StringAlgorithm {
 		for (int i = 0; i < n; i++) {
 			_sa[i] = i;
 		}
-		Arrays.sort(_sa, (l, r) -> {
+		java.util.Arrays.sort(_sa, (l, r) -> {
 			while (l < n && r < n) {
 				if (s[l] != s[r]) return s[l] - s[r];
 				l++;
@@ -36,13 +32,13 @@ class StringAlgorithm {
 		for (int k = 1; k < n; k *= 2) {
 			final int _k = k;
 			final int[] _rnk = rnk;
-			Comparator<Integer> cmp = (x, y) -> {
+			java.util.Comparator<Integer> cmp = (x, y) -> {
 				if (_rnk[x] != _rnk[y]) return _rnk[x] - _rnk[y];
 				int rx = x + _k < n ? _rnk[x + _k] : -1;
 				int ry = y + _k < n ? _rnk[y + _k] : -1;
 				return rx - ry;
 			};
-			Arrays.sort(_sa, cmp);
+			java.util.Arrays.sort(_sa, cmp);
 			tmp[_sa[0]] = 0;
 			for (int i = 1; i < n; i++) {
 				tmp[_sa[i]] = tmp[_sa[i - 1]] + (cmp.compare(_sa[i - 1], _sa[i]) < 0 ? 1 : 0);
@@ -102,8 +98,8 @@ class StringAlgorithm {
 			if (i < upper) sumL[i + 1] += sumS[i];
 		}
 
-		Consumer<int[]> induce = lms -> {
-			Arrays.fill(sa, -1);
+		java.util.function.Consumer<int[]> induce = lms -> {
+			java.util.Arrays.fill(sa, -1);
 			int[] buf = new int[upper + 1];
 			System.arraycopy(sumS, 0, buf, 0, upper + 1);
 			for (int d : lms) {
@@ -128,7 +124,7 @@ class StringAlgorithm {
 		};
 
 		int[] lmsMap = new int[n + 1];
-		Arrays.fill(lmsMap, -1);
+		java.util.Arrays.fill(lmsMap, -1);
 		int m = 0;
 		for (int i = 1; i < n; i++) {
 			if (!ls[i - 1] && ls[i]) {
@@ -205,7 +201,7 @@ class StringAlgorithm {
 		for (int i = 0; i < n; i++) {
 			idx[i] = i;
 		}
-		Arrays.sort(idx, (l, r) -> s[l] - s[r]);
+		java.util.Arrays.sort(idx, (l, r) -> s[l] - s[r]);
 		int[] s2 = new int[n];
 		int now = 0;
 		for (int i = 0; i < n; i++) {
