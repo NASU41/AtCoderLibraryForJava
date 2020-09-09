@@ -22,10 +22,23 @@ public static void main(String[] args) {
 
 ## メソッド
 
-### convolution
+### convolution (NTT prime only)
 
 ```java
 public static long[] convolution(long[] a, long[] b, int mod) 
+```
+
+リストまたは配列 `a` と `b` の剰余convolutionを計算します.
+計算量: $O(n ¥log(n))$
+
+制約
+- `mod` NTT用素数(998244353, 1053818881, 1004535809, ...)
+
+
+### convolution (Any mod)
+
+```java
+public static long[] convolutionLL(long[] a, long[] b, int mod) 
 public static java.util.List<ModIntFactory.ModInt> convolution(
             java.util.List<ModIntFactory.ModInt> a,
             java.util.List<ModIntFactory.ModInt> b
@@ -36,4 +49,4 @@ public static java.util.List<ModIntFactory.ModInt> convolution(
 計算量: $O(n ¥log(n))$
 
 制約
-- `mod` NTT用素数(998244353, 1053818881, 1004535809, ...)
+- `mod` 任意のmod

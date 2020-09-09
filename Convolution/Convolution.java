@@ -2,6 +2,7 @@
  * Convolution.
  *
  * @verified https://atcoder.jp/contests/practice2/tasks/practice2_f
+ * @verified https://judge.yosupo.jp/problem/convolution_mod_1000000007
  */
 public class Convolution {
     /**
@@ -71,16 +72,42 @@ public class Convolution {
      * @param n Value.
      * @return Ceil of power 2.
      */
-    private static int ceil_pow2(int n) {
+    private static int ceilPow2(int n) {
         int x = 0;
         while ((1L << x) < n) x++;
         return x;
     }
 
     /**
+     * Garner's algorithm.
+     *
+     * @param c    Mod convolution results.
+     * @param mods Mods.
+     * @return Result.
+     */
+    private static long garner(long[] c, int[] mods) {
+        int n = c.length + 1;
+        long[] cnst = new long[n];
+        long[] coef = new long[n];
+        java.util.Arrays.fill(coef, 1);
+        for (int i = 0; i < n - 1; i++) {
+            int m1 = mods[i];
+            long v = (c[i] - cnst[i] + m1) % m1;
+            v = v * pow(coef[i], m1 - 2, m1) % m1;
+
+            for (int j = i + 1; j < n; j++) {
+                long m2 = mods[j];
+                cnst[j] = (cnst[j] + coef[j] * v) % m2;
+                coef[j] = (coef[j] * m1) % m2;
+            }
+        }
+        return cnst[n - 1];
+    }
+
+    /**
      * Pre-calculation for NTT.
      *
-     * @param mod Mod.
+     * @param mod NTT Prime.
      * @param g   Primitive root of mod.
      * @return Pre-calculation table.
      */
@@ -139,11 +166,11 @@ public class Convolution {
      *
      * @param a     Target array.
      * @param sumIE Pre-calculation table.
-     * @param mod   Mod.
+     * @param mod   NTT Prime.
      */
     private static void butterflyInv(long[] a, long[] sumIE, int mod) {
         int n = a.length;
-        int h = ceil_pow2(n);
+        int h = ceilPow2(n);
 
         for (int ph = h; ph >= 1; ph--) {
             int w = 1 << (ph - 1), p = 1 << (h - ph);
@@ -167,11 +194,11 @@ public class Convolution {
      *
      * @param a    Target array.
      * @param sumE Pre-calculation table.
-     * @param mod  Mod.
+     * @param mod  NTT Prime.
      */
     private static void butterfly(long[] a, long[] sumE, int mod) {
         int n = a.length;
-        int h = ceil_pow2(n);
+        int h = ceilPow2(n);
 
         for (int ph = 1; ph <= h; ph++) {
             int w = 1 << (ph - 1), p = 1 << (h - ph);
@@ -191,37 +218,19 @@ public class Convolution {
     }
 
     /**
-     * Convolution by ModInt.
-     *
-     * @param a Target array 1.
-     * @param b Target array 2.
-     * @return Answer.
-     */
-    public static java.util.List<ModIntFactory.ModInt> convolution(
-            java.util.List<ModIntFactory.ModInt> a,
-            java.util.List<ModIntFactory.ModInt> b
-    ) {
-        int mod = a.get(0).mod();
-        long[] va = a.stream().mapToLong(ModIntFactory.ModInt::value).toArray();
-        long[] vb = b.stream().mapToLong(ModIntFactory.ModInt::value).toArray();
-        long[] c = convolution(va, vb, mod);
-        ModIntFactory factory = new ModIntFactory(mod);
-        return java.util.Arrays.stream(c).mapToObj(factory::create).collect(java.util.stream.Collectors.toList());
-    }
-
-    /**
      * Convolution.
      *
      * @param a   Target array 1.
      * @param b   Target array 2.
-     * @param mod Mod(>= 3).
+     * @param mod NTT Prime.
      * @return Answer.
      */
     public static long[] convolution(long[] a, long[] b, int mod) {
         int n = a.length;
         int m = b.length;
+        if (n == 0 || m == 0) return new long[0];
 
-        int z = 1 << ceil_pow2(n + m - 1);
+        int z = 1 << ceilPow2(n + m - 1);
         {
             long[] na = new long[z];
             long[] nb = new long[z];
@@ -246,6 +255,56 @@ public class Convolution {
         long iz = pow(z, mod - 2, mod);
         for (int i = 0; i < n + m - 1; i++) a[i] = a[i] * iz % mod;
         return a;
+    }
+
+    /**
+     * Convolution.
+     *
+     * @param a   Target array 1.
+     * @param b   Target array 2.
+     * @param mod Any mod.
+     * @return Answer.
+     */
+    public static long[] convolutionLL(long[] a, long[] b, int mod) {
+        int n = a.length;
+        int m = b.length;
+        if (n == 0 || m == 0) return new long[0];
+
+        int mod1 = 754974721;
+        int mod2 = 167772161;
+        int mod3 = 469762049;
+
+        long[] c1 = convolution(a, b, mod1);
+        long[] c2 = convolution(a, b, mod2);
+        long[] c3 = convolution(a, b, mod3);
+
+        int retSize = c1.length;
+        long[] ret = new long[retSize];
+        int[] mods = {mod1, mod2, mod3, mod};
+        for (int i = 0; i < retSize; ++i) {
+            ret[i] = garner(new long[]{c1[i], c2[i], c3[i]}, mods);
+        }
+        return ret;
+    }
+
+    /**
+     * Convolution by ModInt.
+     *
+     * @param a Target array 1.
+     * @param b Target array 2.
+     * @return Answer.
+     */
+    public static java.util.List<ModIntFactory.ModInt> convolution(
+            java.util.List<ModIntFactory.ModInt> a,
+            java.util.List<ModIntFactory.ModInt> b
+    ) {
+        int mod = a.get(0).mod();
+        long[] va = a.stream().mapToLong(ModIntFactory.ModInt::value).toArray();
+        long[] vb = b.stream().mapToLong(ModIntFactory.ModInt::value).toArray();
+        long[] c = convolutionLL(va, vb, mod);
+
+        ModIntFactory factory = new ModIntFactory(mod);
+        return java.util.Arrays.stream(c).mapToObj(factory::create).collect(java.util.stream.Collectors.toList());
     }
 
     /**
