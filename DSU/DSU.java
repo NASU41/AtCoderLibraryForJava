@@ -9,10 +9,11 @@ class DSU {
 	}
 
 	int merge(int a, int b) {
-		if (!(0 <= a && a < n) || !(0 <= b && b < n)) {
-			// この式が成立しない物は動作しません。
-			return -1;
-		}
+		if (!(0 <= a && a < n))
+			throw new IndexOutOfBoundsException("a=" + a);
+		if (!(0 <= b && b < n))
+			throw new IndexOutOfBoundsException("b=" + b);
+
 		int x = leader(a);
 		int y = leader(b);
 		if (x == y) return x;
@@ -27,10 +28,10 @@ class DSU {
 	}
 
 	boolean same(int a, int b) {
-		if (!(0 <= a && a < n) || !(0 <= b && b < n)) {
-			// この式が成立しない物は動作しません。
-			return false;
-		}
+		if (!(0 <= a && a < n))
+			throw new IndexOutOfBoundsException("a=" + a);
+		if (!(0 <= b && b < n))
+			throw new IndexOutOfBoundsException("b=" + b);
 		return leader(a) == leader(b);
 	}
 
@@ -44,10 +45,8 @@ class DSU {
 	}
 
 	int size(int a) {
-		if (!(0 <= a && a < n)) {
-			// この式が成立しない物は動作しません。
-			return -1;
-		}
+		if (!(0 <= a && a < n))
+			throw new IndexOutOfBoundsException("" + a);
 		return -parentOrSize[leader(a)];
 	}
 
