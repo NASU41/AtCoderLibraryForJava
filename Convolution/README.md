@@ -10,7 +10,7 @@ NTTで剰余Convolutionを計算するクラスです。
 
 ```java
 public static void main(String[] args) {
-    // 3以上の素数のModを指定します
+    // NTT用素数のModを指定します
     int mod = 998244353;
     long[] a = { 1, 2, 3, 4, 5 };
     long[] b = { 6, 7, 8 };
@@ -36,4 +36,4 @@ public static java.util.List<ModIntFactory.ModInt> convolution(
 計算量: $O(n ¥log(n))$
 
 制約
-- `mod` 3以上の素数
+- `mod` NTT用素数(998244353, 1053818881, 1004535809, ...)
