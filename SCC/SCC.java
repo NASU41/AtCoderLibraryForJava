@@ -11,17 +11,29 @@ class SCC {
     int m;
     final java.util.ArrayList<Edge> unorderedEdges;
     final int[] start;
+    final int[] ids;
+    boolean hasBuilt = false;
 
     public SCC(int n) {
         this.n = n;
         this.unorderedEdges = new java.util.ArrayList<>();
         this.start = new int[n + 1];
+        this.ids = new int[n];
     }
 
     public void addEdge(int from, int to) {
         unorderedEdges.add(new Edge(from, to));
         start[from + 1]++;
         this.m++;
+    }
+
+    public int id(int i) {
+        if (!hasBuilt) {
+            throw new UnsupportedOperationException(
+                "Graph hasn't been built."
+            );
+        }
+        return ids[i];
     }
     
     public int[][] build() {
@@ -42,7 +54,6 @@ class SCC {
         int[] vis = new int[n];
         int[] low = new int[n];
         int[] ord = new int[n];
-        int[] ids = new int[n];
         java.util.Arrays.fill(ord, -1);
         // u = lower32(stack[i]) : visiting vertex
         // j = upper32(stack[i]) : jth child
@@ -110,6 +121,7 @@ class SCC {
             int cmp = ids[i];
             groups[cmp][--counts[cmp]] = i;
         }
+        hasBuilt = true;
         return groups;
     }
 }

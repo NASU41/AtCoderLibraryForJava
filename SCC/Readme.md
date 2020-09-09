@@ -48,3 +48,26 @@ public int[][] build()
 計算量
 
 追加した辺の本数を `m` として $O(n + m)$
+
+### comp
+
+```java
+public int id(int i)
+```
+
+頂点 `i` が (トポロジカル順序において) 何番目の強連結成分に属しているかを返します。即ち，`build` で得られる「頂点の配列」の配列を `g` とすると、`g[id(i)][j] = i` なる `j` が存在します。
+
+__ただし、`build` を呼ぶ前にこのメソッドが呼ばれた場合は、実行時例外 `UnsupportedOperationException` が発生します。__
+
+制約
+
+- __`build` メソッドを既に呼んでいる__
+- `0 <= i < n`
+
+計算量
+
+$O(1)$
+
+## 使用例
+
+[AtCoder Library Practice Contest G - SCC](https://atcoder.jp/contests/practice2/submissions/16603978)
