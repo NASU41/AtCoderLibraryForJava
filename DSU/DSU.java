@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 class DSU {
 	private int n;
 	private int[] parentOrSize;
@@ -57,13 +60,14 @@ class DSU {
 			leaderBuf[i] = leader(i);
 			groupSize[leaderBuf[i]]++;
 		}
-		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Integer>> result = new ArrayList<>(n);
 		for (int i = 0; i < n; i++) {
-			result.add(new ArrayList<>());
+			result.add(new ArrayList<>(groupSize[i]));
 		}
 		for (int i = 0; i < n; i++) {
 			result.get(leaderBuf[i]).add(i);
 		}
+		result.removeIf(ArrayList::isEmpty);
 		return result;
 	}
 }
