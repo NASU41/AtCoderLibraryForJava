@@ -39,14 +39,54 @@ class ModIntFactory {
         public ModInt add(ModInt mi) {
             return new ModInt(ma.add(value, mi.value));
         }
+        public ModInt add(ModInt mi1, ModInt mi2) {
+            return new ModInt(ma.add(value, mi1.value)).addAsg(mi2);
+        }
+        public ModInt add(ModInt mi1, ModInt mi2, ModInt mi3) {
+            return new ModInt(ma.add(value, mi1.value)).addAsg(mi2).addAsg(mi3);
+        }
+        public ModInt add(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4) {
+            return new ModInt(ma.add(value, mi1.value)).addAsg(mi2).addAsg(mi3).addAsg(mi4);
+        }
+        public ModInt add(ModInt mi1, ModInt... mis) {
+            ModInt mi = add(mi1);
+            for (ModInt m : mis) mi.addAsg(m);
+            return mi;
+        }
+        public ModInt add(long mi) {
+            return new ModInt(ma.add(value, ma.remainder(mi)));
+        }
         public ModInt sub(ModInt mi) {
             return new ModInt(ma.sub(value, mi.value));
+        }
+        public ModInt sub(long mi) {
+            return new ModInt(ma.sub(value, ma.remainder(mi)));
         }
         public ModInt mul(ModInt mi) {
             return new ModInt(ma.mul(value, mi.value));
         }
+        public ModInt mul(ModInt mi1, ModInt mi2) {
+            return new ModInt(ma.mul(value, mi1.value)).mulAsg(mi2);
+        }
+        public ModInt mul(ModInt mi1, ModInt mi2, ModInt mi3) {
+            return new ModInt(ma.mul(value, mi1.value)).mulAsg(mi2).mulAsg(mi3);
+        }
+        public ModInt mul(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4) {
+            return new ModInt(ma.mul(value, mi1.value)).mulAsg(mi2).mulAsg(mi3).mulAsg(mi4);
+        }
+        public ModInt mul(ModInt mi1, ModInt... mis) {
+            ModInt mi = mul(mi1);
+            for (ModInt m : mis) mi.mulAsg(m);
+            return mi;
+        }
+        public ModInt mul(long mi) {
+            return new ModInt(ma.mul(value, ma.remainder(mi)));
+        }
         public ModInt div(ModInt mi) {
             return new ModInt(ma.div(value, mi.value));
+        }
+        public ModInt div(long mi) {
+            return new ModInt(ma.div(value, ma.remainder(mi)));
         }
         public ModInt inv() {
             return new ModInt(ma.inv(value));
@@ -58,16 +98,58 @@ class ModIntFactory {
             this.value = ma.add(value, mi.value);
             return this;
         }
+        public ModInt addAsg(ModInt mi1, ModInt mi2) {
+            return addAsg(mi1).addAsg(mi2);
+        }
+        public ModInt addAsg(ModInt mi1, ModInt mi2, ModInt mi3) {
+            return addAsg(mi1).addAsg(mi2).addAsg(mi3);
+        }
+        public ModInt addAsg(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4) {
+            return addAsg(mi1).addAsg(mi2).addAsg(mi3).addAsg(mi4);
+        }
+        public ModInt addAsg(ModInt... mis) {
+            for (ModInt m : mis) addAsg(m);
+            return this;
+        }
+        public ModInt addAsg(long mi) {
+            this.value = ma.add(value, ma.remainder(mi));
+            return this;
+        }
         public ModInt subAsg(ModInt mi) {
             this.value = ma.sub(value, mi.value);
+            return this;
+        }
+        public ModInt subAsg(long mi) {
+            this.value = ma.sub(value, ma.remainder(mi));
             return this;
         }
         public ModInt mulAsg(ModInt mi) {
             this.value = ma.mul(value, mi.value);
             return this;
         }
+        public ModInt mulAsg(ModInt mi1, ModInt mi2) {
+            return mulAsg(mi1).mulAsg(mi2);
+        }
+        public ModInt mulAsg(ModInt mi1, ModInt mi2, ModInt mi3) {
+            return mulAsg(mi1).mulAsg(mi2).mulAsg(mi3);
+        }
+        public ModInt mulAsg(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4) {
+            return mulAsg(mi1).mulAsg(mi2).mulAsg(mi3).mulAsg(mi4);
+        }
+        public ModInt mulAsg(ModInt... mis) {
+            for (ModInt m : mis) mulAsg(m);
+            return this;
+        }
+        public ModInt mulAsg(long mi) {
+            this.value = ma.mul(value, ma.remainder(mi));
+            return this;
+        }
         public ModInt divAsg(ModInt mi) {
             this.value = ma.div(value, mi.value);
+            return this;
+        }
+        public ModInt divAsg(long mi) {
+            this.value = ma.div(value, ma.remainder(mi));
             return this;
         }
         @Override
@@ -90,6 +172,7 @@ class ModIntFactory {
 
     private interface ModArithmetic {
         public int mod();
+        public int remainder(long value);
         public int add(int a, int b);
         public int sub(int a, int b);
         public int mul(int a, int b);
@@ -119,6 +202,7 @@ class ModIntFactory {
     
         static final class ModArithmetic1 implements ModArithmetic {
             public int mod() {return 1;}
+            public int remainder(long value) {return 0;}
             public int add(int a, int b) {return 0;}
             public int sub(int a, int b) {return 0;}
             public int mul(int a, int b) {return 0;}
@@ -127,6 +211,7 @@ class ModIntFactory {
         }
         static final class ModArithmetic2 implements ModArithmetic {
             public int mod() {return 2;}
+            public int remainder(long value) {return (int) (value & 1);}
             public int add(int a, int b) {return a ^ b;}
             public int sub(int a, int b) {return a ^ b;}
             public int mul(int a, int b) {return a & b;}
@@ -143,6 +228,9 @@ class ModIntFactory {
             private final int mod = 998244353;
             public int mod() {
                 return mod;
+            }
+            public int remainder(long value) {
+                return (int) ((value %= mod) < 0 ? value + mod : value);
             }
             public int add(int a, int b) {
                 int res = a + b;
@@ -191,6 +279,9 @@ class ModIntFactory {
             private final int mod = 1000000007;
             public int mod() {
                 return mod;
+            }
+            public int remainder(long value) {
+                return (int) ((value %= mod) < 0 ? value + mod : value);
             }
             public int add(int a, int b) {
                 int res = a + b;
@@ -267,6 +358,10 @@ class ModIntFactory {
                 return (int) (x < mod ? x : x - mod);
             }
             @Override
+            public int remainder(long value) {
+                return generate((value %= mod) < 0 ? value + mod : value);
+            }
+            @Override
             public int mul(int a, int b) {
                 return reduce((long) a * b);
             }
@@ -306,6 +401,10 @@ class ModIntFactory {
                 return (int) (x < mod ? x : x - mod);
             }
             @Override
+            public int remainder(long value) {
+                return (int) ((value %= mod) < 0 ? value + mod : value);
+            }
+            @Override
             public int mul(int a, int b) {
                 return reduce((long) a * b);
             }
@@ -317,6 +416,9 @@ class ModIntFactory {
             }
             public int mod() {
                 return mod;
+            }
+            public int remainder(long value) {
+                return (int) ((value %= mod) < 0 ? value + mod : value);
             }
             public int add(int a, int b) {
                 int sum = a + b;
