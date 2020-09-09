@@ -49,7 +49,7 @@ public int[][] build()
 
 追加した辺の本数を `m` として $O(n + m)$
 
-### comp
+### id
 
 ```java
 public int id(int i)
