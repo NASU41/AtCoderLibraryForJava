@@ -79,47 +79,93 @@ public int mod()
 public int value()
 ```
 
-保持している値を返します．__注意: `ModInt` のフィールド `int value` に直接アクセスはしないで下さい. 正しい値が取得できない可能性があります.__
+保持している値を返します．__注意: `ModInt` のフィールド `int value` に直接アクセスしないで下さい. 正しい値が取得できない可能性があります.__
 
 計算量: $O(1)$
 
 #### add
 
 ```java
+// (1)
 public ModInt add(ModInt mi)
+// (2)
+public ModInt add(ModInt mi1, ModInt mi2)
+// (3)
+public ModInt add(ModInt mi1, ModInt mi2, ModInt mi3)
+// (4)
+public ModInt add(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4)
+// (5)
+public ModInt add(ModInt mi1, ModInt... mis)
+// (6)
+public ModInt add(long mi)
 ```
 
-値 `(a + b) % mod` を持つ `ModInt` を新たに生成します (`a` および `b` の値は書き換わりません).
+1. 値 `(a + b) % mod` を持つ `ModInt` を新たに生成します.
+2. 値 `(a + b + c) % mod` を持つ `ModInt` を新たに生成します.
+3. 値 `(a + b + c + d) % mod` を持つ `ModInt` を新たに生成します.
+4. 値 `(a + b + c + d + e) % mod` を持つ `ModInt` を新たに生成します.
+5. 値 `(a + b + c + d + e + f + ...) % mod` を持つ `ModInt` を新たに生成します.
+6. 値 `(a + b) % mod` を持つ `ModInt` を新たに生成します. 定数の加算でこれを用いると便利です.
 
-計算量: $O(1)$
+計算量:
+
+- (1)~(4), (6): $O(1)$
+- (5): $n$ を可変長引数の長さとして，$O(n)$
 
 #### sub
 
 ```java
+// (1)
 public ModInt sub(ModInt mi)
+// (2)
+public ModInt sub(long mi)
 ```
 
-値 `(a - b) % mod` を持つ `ModInt` を新たに生成します (`a` および `b` の値は書き換わりません).
+1. 値 `(a - b) % mod` を持つ `ModInt` を新たに生成します.
+2. 値 `(a - b) % mod` を持つ `ModInt` を新たに生成します. 定数の減算でこれを用いると便利です.
 
 計算量: $O(1)$
 
 #### mul
 
 ```java
+// (1)
 public ModInt mul(ModInt mi)
+// (2)
+public ModInt mul(ModInt mi1, ModInt mi2)
+// (3)
+public ModInt mul(ModInt mi1, ModInt mi2, ModInt mi3)
+// (4)
+public ModInt mul(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4)
+// (5)
+public ModInt mul(ModInt mi1, ModInt... mis)
+// (6)
+public ModInt mul(long mi)
 ```
 
-値 `(a * b) % mod` を持つ `ModInt` を新たに生成します (`a` および `b` の値は書き換わりません).
+1. 値 `(a * b) % mod` を持つ `ModInt` を新たに生成します.
+2. 値 `(a * b * c) % mod` を持つ `ModInt` を新たに生成します.
+3. 値 `(a * b * c * d) % mod` を持つ `ModInt` を新たに生成します.
+4. 値 `(a * b * c * d * e) % mod` を持つ `ModInt` を新たに生成します.
+5. 値 `(a * b * c * d * e * f * ...) % mod` を持つ `ModInt` を新たに生成します.
+6. 値 `(a * b) % mod` を持つ `ModInt` を新たに生成します. 定数の乗算でこれを用いると便利です.
 
-計算量: $O(1)$
+計算量:
+
+- (1)~(4), (6): $O(1)$
+- (5): $n$ を可変長引数の長さとして，$O(n)$
 
 #### div
 
 ```java
+// (1)
 public ModInt div(ModInt mi)
+// (2)
+public ModInt div(long mi)
 ```
 
-値 `(a * b^(-1)) % mod` を持つ `ModInt` を新たに生成します (`a` および `b` の値は書き換わりません). ただし，`b^(-1)` は `(b * x) % mod = 1` を満たす `x` です.
+1. 値 `(a * b^(-1)) % mod` を持つ `ModInt` を新たに生成します. ただし，`b^(-1)` は `(b * x) % mod = 1` を満たす `x` です.
+2. 値 `(a * b^(-1)) % mod` を持つ `ModInt` を新たに生成します. 定数の除算でこれを用いると便利です.
 
 計算量: $O(\log \mod)$
 
@@ -154,40 +200,86 @@ public ModInt pow(long n)
 #### addAsg
 
 ```java
+// (1)
 public ModInt addAsg(ModInt mi)
+// (2)
+public ModInt addAsg(ModInt mi1, ModInt mi2)
+// (3)
+public ModInt addAsg(ModInt mi1, ModInt mi2, ModInt mi3)
+// (4)
+public ModInt addAsg(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4)
+// (5)
+public ModInt addAsg(ModInt mi1, ModInt... mis)
+// (6)
+public ModInt addAsg(long mi)
 ```
 
-`a += b` を行います. `a` の値は書き換えられます.
+1. `a += b` を行います. `a` の値は書き換えられます.
+2. `a += b + c` を行います. `a` の値は書き換えられます.
+3. `a += b + c + d` を行います. `a` の値は書き換えられます.
+4. `a += b + c + d + e` を行います. `a` の値は書き換えられます.
+5. `a += b + c + d + e + f + ...` を行います. `a` の値は書き換えられます.
+6. `a += b` を行います. `a` の値は書き換えられます. 定数の加算でこれを用いると便利です.
 
-計算量: $O(1)$
+計算量:
+
+- (1)~(4), (6): $O(1)$
+- (5): $n$ を可変長引数の長さとして，$O(n)$
 
 #### subAsg
 
 ```java
+// (1)
 public ModInt subAsg(ModInt mi)
+// (2)
+public ModInt subAsg(long mi)
 ```
 
-`a -= b` を行います. `a` の値は書き換えられます.
+1. `a -= b` を行います. `a` の値は書き換えられます.
+2. `a -= b` を行います. `a` の値は書き換えられます. 定数の加算でこれを用いると便利です.
 
 計算量: $O(1)$
 
 #### mulAsg
 
 ```java
+// (1)
 public ModInt mulAsg(ModInt mi)
+// (2)
+public ModInt mulAsg(ModInt mi1, ModInt mi2)
+// (3)
+public ModInt mulAsg(ModInt mi1, ModInt mi2, ModInt mi3)
+// (4)
+public ModInt mulAsg(ModInt mi1, ModInt mi2, ModInt mi3, ModInt mi4)
+// (5)
+public ModInt mulAsg(ModInt mi1, ModInt... mis)
+// (6)
+public ModInt mulAsg(long mi)
 ```
 
-`a *= b` を行います. `a` の値は書き換えられます.
+1. `a *= b` を行います. `a` の値は書き換えられます.
+2. `a *= b * c` を行います. `a` の値は書き換えられます.
+3. `a *= b * c * d` を行います. `a` の値は書き換えられます.
+4. `a *= b * c * d * e` を行います. `a` の値は書き換えられます.
+5. `a *= b * c * d * e * f * ...` を行います. `a` の値は書き換えられます.
+6. `a *= b` を行います. `a` の値は書き換えられます. 定数の加算でこれを用いると便利です.
 
-計算量: $O(1)$
+計算量:
+
+- (1)~(4), (6): $O(1)$
+- (5): $n$ を可変長引数の長さとして，$O(n)$
 
 #### divAsg
 
 ```java
+// (1)
 public ModInt divAsg(ModInt mi)
+// (2)
+public ModInt divAsg(long mi)
 ```
 
-`a *= b^(-1)` を行います (`a /= b`). `a` の値は書き換えられます. ただし，`b^(-1)` は `(b * x) % mod = 1` を満たす `x` です.
+1. `a *= b^(-1)` を行います. `a` の値は書き換えられます. ただし，`b^(-1)` は `(b * x) % mod = 1` を満たす `x` です.
+2. `a *= b^(-1)` を行います. `a` の値は書き換えられます. 定数の除算でこれを用いると便利です.
 
 計算量: $O(\log \mod)$
 
