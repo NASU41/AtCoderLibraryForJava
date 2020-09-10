@@ -22,6 +22,17 @@ class MathLib{
         return new long[]{s,m0};
     }
 
+    public static long pow_mod(long x, long n, long m){
+        assert(n >= 0 && m >= 1);
+        long ans = 1;
+        while(n > 0){
+            if(n%2==1) ans = (ans * x) % m;
+            x = (x*x) % m;
+            n /= 2;
+        }
+        return ans;
+    }
+
     public static long[] crt(long[] r, long[] m){
         assert(r.length == m.length);
         int n = r.length;
