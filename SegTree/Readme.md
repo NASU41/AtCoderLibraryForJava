@@ -128,3 +128,7 @@ fが単調だとすれば、`f(op(a[l], a[l + 1], ..., a[r - 1])) = true` とな
 計算量
 
 $O(\log n)$
+
+## 使用例
+
+[AtCoder Library Practice Contest J - Segment Tree](https://atcoder.jp/contests/practice2/submissions/16646450)
