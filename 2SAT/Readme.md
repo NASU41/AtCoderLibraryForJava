@@ -90,7 +90,7 @@ public boolean satisfiable()
 ### answer
 
 ```java
-public java.util.BitSet answer()
+public boolean[] answer()
 ```
 
 `satisfiable` を最後に呼んだ時点での、クローズを満たす割当を返す。割当が存在しなかった場合は `null` を返す。
@@ -107,4 +107,4 @@ $O(n)$
 
 ## 使用例
 
-[AtCoder Library Practice Contest H - Two SAT](https://atcoder.jp/contests/practice2/submissions/16603939)
+[AtCoder Library Practice Contest H - Two SAT](https://atcoder.jp/contests/practice2/submissions/16647102)
