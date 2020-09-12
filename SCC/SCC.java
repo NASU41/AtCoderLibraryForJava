@@ -1,3 +1,6 @@
+/**
+ * @verified https://atcoder.jp/contests/practice2/tasks/practice2_g
+ */
 class SCC {
 
     static class Edge {
