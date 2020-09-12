@@ -158,3 +158,7 @@ fが単調だとすれば、`f(op(a[l], a[l + 1], ..., a[r - 1])) = true` とな
 計算量
 
 $O(\log n)$
+
+## 使用例
+
+[AtCoder Library Practice Contest K - Range Affine Range Sum](https://atcoder.jp/contests/practice2/submissions/16646083)

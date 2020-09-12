@@ -83,11 +83,11 @@ class CapEdge {
     // (1)
     public int getFrom()
     // (2)
-    public int getTO()
+    public int getTo()
     // (3)
-    public int getCap()
+    public long getCap()
     // (4)
-    public int getFlow()
+    public long getFlow()
 };
 ```
 
@@ -111,8 +111,6 @@ public java.util.ArrayList<CapEdge> getEdges()
 
 計算量
 
-`m` を追加された辺数として
-
 - (1): $O(1)$
 - (2): $O(1)$
 
@@ -131,3 +129,7 @@ public void changeEdge(int i, long newCap, long newFlow)
 計算量
 
 $O(1)
+
+## 使用例
+
+[AtCoder Library Practice Contest D - Maxflow](https://atcoder.jp/contests/practice2/submissions/16646346)

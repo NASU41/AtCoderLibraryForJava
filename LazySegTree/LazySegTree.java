@@ -3,6 +3,7 @@
  * 
  * @verified https://atcoder.jp/contests/practice2/tasks/practice2_k
  */
+
 class LazySegTree<S, F> {
     final int MAX;
 
@@ -130,8 +131,11 @@ class LazySegTree<S, F> {
     }
 
     public void apply(int p, F f) {
-        Dat[p] = Mapping.apply(f, get(p));
-        updateFrom(p + N);
+        exclusiveRangeCheck(p);
+        p += N;
+        pushTo(p);
+        Dat[p] = Mapping.apply(f, Dat[p]);
+        updateFrom(p);
     }
 
     public void apply(int l, int r, F f) {
@@ -163,7 +167,7 @@ class LazySegTree<S, F> {
 
     public int maxRight(int l, java.util.function.Predicate<S> g) {
         inclusiveRangeCheck(l);
-        if (!f.test(E)) {
+        if (!g.test(E)) {
             throw new IllegalArgumentException("Identity element must satisfy the condition.");
         }
         if (l == MAX) return MAX;
@@ -191,7 +195,7 @@ class LazySegTree<S, F> {
 
     public int minLeft(int r, java.util.function.Predicate<S> g) {
         inclusiveRangeCheck(r);
-        if (!f.test(E)) {
+        if (!g.test(E)) {
             throw new IllegalArgumentException("Identity element must satisfy the condition.");
         }
         if (r == 0) return 0;

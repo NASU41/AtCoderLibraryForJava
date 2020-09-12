@@ -1,3 +1,6 @@
+/**
+ * @verified https://atcoder.jp/contests/practice2/tasks/practice2_d
+ */
 class MaxFlow {
     public class CapEdge {
         private final int from, to;
@@ -31,9 +34,9 @@ class MaxFlow {
     }
 
     public int addEdge(int from, int to, long cap) {
-        vertexRangeCheck(from);
-        vertexRangeCheck(to);
-        capNonNegativeCheck(cap);
+        rangeCheck(from, 0, n);
+        rangeCheck(to, 0, n);
+        nonNegativeCheck(cap, "Capacity");
         CapEdge e = new CapEdge(from, to, cap, count[to]);
         count[from]++; count[to]++;
         edges.add(e);
@@ -41,7 +44,7 @@ class MaxFlow {
     }
 
     public CapEdge getEdge(int i) {
-        edgeRangeCheck(i);
+        rangeCheck(i, 0, m);
         return edges.get(i);
     }
 
@@ -50,8 +53,8 @@ class MaxFlow {
     }
 
     public void changeEdge(int i, long newCap, long newFlow) {
-        edgeRangeCheck(i);
-        capNonNegativeCheck(newCap);
+        rangeCheck(i, 0, m);
+        nonNegativeCheck(newCap, "Capacity");
         if (newFlow > newCap) {
             throw new IllegalArgumentException(
                 String.format("Flow %d is greater than capacity %d.", newCap, newFlow)
@@ -79,8 +82,8 @@ class MaxFlow {
     }
 
     public long flow(int s, int t, long flowLimit) {
-        vertexRangeCheck(s);
-        vertexRangeCheck(t);
+        rangeCheck(s, 0, n);
+        rangeCheck(t, 0, n);
         buildGraph();
         long flow = 0;
         int[] level = new int[n];
@@ -138,8 +141,8 @@ class MaxFlow {
     }
 
     public long fordFulkersonFlow(int s, int t, long flowLimit) {
-        vertexRangeCheck(s);
-        vertexRangeCheck(t);
+        rangeCheck(s, 0, n);
+        rangeCheck(t, 0, n);
         buildGraph();
         boolean[] used = new boolean[n];
         long flow = 0;
@@ -166,7 +169,7 @@ class MaxFlow {
     }
 
     public boolean[] minCut(int s) {
-        vertexRangeCheck(s);
+        rangeCheck(s, 0, n);
         boolean[] reachable = new boolean[n];
         int[] stack = new int[n];
         int ptr = 0;
@@ -184,26 +187,18 @@ class MaxFlow {
         return reachable;
     }
 
-    private void vertexRangeCheck(int i) {
-        if (i < 0 || i >= n) {
+    private void rangeCheck(int i, int minInlusive, int maxExclusive) {
+        if (i < 0 || i >= maxExclusive) {
             throw new IndexOutOfBoundsException(
-                String.format("Index %d out of bounds for length %d", i, n)
+                String.format("Index %d out of bounds for length %d", i, maxExclusive)
             );
         }
     }
 
-    private void edgeRangeCheck(int i) {
-        if (i < 0 || i >= m) {
-            throw new IndexOutOfBoundsException(
-                String.format("Index %d out of bounds for length %d", i, m)
-            );
-        }
-    }
-
-    private void capNonNegativeCheck(long cap) {
+    private void nonNegativeCheck(long cap, java.lang.String attribute) {
         if (cap < 0) {
             throw new IllegalArgumentException(
-                String.format("Capacity %d is negative.", cap)
+                String.format("%s %d is negative.", attribute, cap)
             );
         }
     }
