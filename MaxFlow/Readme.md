@@ -83,11 +83,11 @@ class CapEdge {
     // (1)
     public int getFrom()
     // (2)
-    public int getTO()
+    public int getTo()
     // (3)
-    public int getCap()
+    public long getCap()
     // (4)
-    public int getFlow()
+    public long getFlow()
 };
 ```
 
@@ -110,8 +110,6 @@ public java.util.ArrayList<CapEdge> getEdges()
 - (1): 追加した辺の数を `m` として，`0 <= i < m`。
 
 計算量
-
-`m` を追加された辺数として
 
 - (1): $O(1)$
 - (2): $O(1)$
