@@ -161,4 +161,4 @@ $O(\log n)$
 
 ## 使用例
 
-[AtCoder Library Practice Contest K-Range Affine Range Sum](https://atcoder.jp/contests/practice2/submissions/16646083)
+[AtCoder Library Practice Contest K - Range Affine Range Sum](https://atcoder.jp/contests/practice2/submissions/16646083)

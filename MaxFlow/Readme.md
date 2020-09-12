@@ -131,3 +131,7 @@ public void changeEdge(int i, long newCap, long newFlow)
 計算量
 
 $O(1)
+
+## 使用例
+
+[AtCoder Library Practice Contest D - Maxflow](https://atcoder.jp/contests/practice2/submissions/16646346)
