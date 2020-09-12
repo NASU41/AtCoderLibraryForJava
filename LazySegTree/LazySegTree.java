@@ -130,8 +130,11 @@ class LazySegTree<S, F> {
     }
 
     public void apply(int p, F f) {
-        Dat[p] = Mapping.apply(f, get(p));
-        updateFrom(p + N);
+        exclusiveRangeCheck(p);
+        p += N;
+        pushTo(p);
+        Dat[p] = Mapping.apply(f, Dat[p]);
+        updateFrom(p);
     }
 
     public void apply(int l, int r, F f) {
