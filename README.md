@@ -22,6 +22,10 @@
 * [Lazy Segment Tree](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/LazySegTree)
 * [Mod Int](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/ModInt)
 
+また, ACL外のアルゴリズムについても必要に応じて実装を進めています.
+
+* [Multiset](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/Multiset)
+
 ## プログラムを編集したい方へ
 Slackワークスペースへの参加を推奨しています.
 各編集者の進捗共有などに利用しているので, 重複を防ぐことができます.
