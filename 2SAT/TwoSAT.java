@@ -1,7 +1,10 @@
+/**
+ * @verified https://atcoder.jp/contests/practice2/submissions/16647102
+ */
 class TwoSAT {
     private final int n;
     private final InternalSCC scc;
-    private final java.util.BitSet answer;
+    private final boolean[] answer;
 
     private boolean hasCalledSatisfiable = false;
     private boolean existsAnswer = false;
@@ -9,7 +12,7 @@ class TwoSAT {
     public TwoSAT(int n) {
         this.n = n;
         this.scc = new InternalSCC(2 * n);
-        this.answer = new java.util.BitSet(n);
+        this.answer = new boolean[n];
     }
 
     public void addClause(int x, boolean f, int y, boolean g) {
@@ -30,12 +33,12 @@ class TwoSAT {
         int[] ids = scc.ids();
         for (int i = 0; i < n; i++) {
             if (ids[i << 1 | 0] == ids[i << 1 | 1]) return existsAnswer = false;
-            answer.set(i, ids[i << 1 | 0] < ids[i << 1 | 1]);
+            answer[i] = ids[i << 1 | 0] < ids[i << 1 | 1];
         }
         return existsAnswer = true;
     }
 
-    public java.util.BitSet answer() {
+    public boolean[] answer() {
         if (!hasCalledSatisfiable) {
             throw new UnsupportedOperationException(
                 "Call TwoSAT#satisfiable at least once before TwoSAT#answer."
