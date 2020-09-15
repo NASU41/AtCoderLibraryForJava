@@ -1,8 +1,8 @@
-class Multiset<T> extends TreeMap<T,Long>{
+class Multiset<T> extends java.util.TreeMap<T,Long>{
     public Multiset(){
         super();
     }
-    public Multiset(List<T> list){
+    public Multiset(java.util.List<T> list){
         super();
         for(T e: list) this.addOne(e);
     }

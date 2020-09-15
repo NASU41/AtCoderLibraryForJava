@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-
 class DSU {
 	private int n;
 	private int[] parentOrSize;
@@ -8,7 +5,7 @@ class DSU {
 	public DSU(int n) {
 		this.n = n;
 		this.parentOrSize = new int[n];
-		Arrays.fill(parentOrSize, -1);
+		java.util.Arrays.fill(parentOrSize, -1);
 	}
 
 	int merge(int a, int b) {
@@ -53,21 +50,21 @@ class DSU {
 		return -parentOrSize[leader(a)];
 	}
 
-	ArrayList<ArrayList<Integer>> groups() {
+	java.util.ArrayList<java.util.ArrayList<Integer>> groups() {
 		int[] leaderBuf = new int[n];
 		int[] groupSize = new int[n];
 		for (int i = 0; i < n; i++) {
 			leaderBuf[i] = leader(i);
 			groupSize[leaderBuf[i]]++;
 		}
-		ArrayList<ArrayList<Integer>> result = new ArrayList<>(n);
+		java.util.ArrayList<java.util.ArrayList<Integer>> result = new java.util.ArrayList<>(n);
 		for (int i = 0; i < n; i++) {
-			result.add(new ArrayList<>(groupSize[i]));
+			result.add(new java.util.ArrayList<>(groupSize[i]));
 		}
 		for (int i = 0; i < n; i++) {
 			result.get(leaderBuf[i]).add(i);
 		}
-		result.removeIf(ArrayList::isEmpty);
+		result.removeIf(java.util.ArrayList::isEmpty);
 		return result;
 	}
 }
