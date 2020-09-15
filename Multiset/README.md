@@ -10,7 +10,7 @@
 を $O(\log N)$ の時間で求めることができるデータ構造です.
 
 ## コンストラクタ
-### FenwickTree
+### Multiset
 ```java
 public Multiset()
 ```
