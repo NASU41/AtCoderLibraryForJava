@@ -25,6 +25,8 @@ class SCC {
     }
 
     public void addEdge(int from, int to) {
+        rangeCheck(from);
+        rangeCheck(to);
         unorderedEdges.add(new Edge(from, to));
         start[from + 1]++;
         this.m++;
@@ -36,6 +38,7 @@ class SCC {
                 "Graph hasn't been built."
             );
         }
+        rangeCheck(i);
         return ids[i];
     }
     
@@ -126,5 +129,13 @@ class SCC {
         }
         hasBuilt = true;
         return groups;
+    }
+
+    private void rangeCheck(int i) {
+        if (i < 0 || i >= n) {
+            throw new IndexOutOfBoundsException(
+                String.format("Index %d out of bounds for length %d", i, n)
+            );
+        }
     }
 }
