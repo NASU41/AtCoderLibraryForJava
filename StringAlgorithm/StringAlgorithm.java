@@ -1,4 +1,4 @@
-import java.util.stream.IntStream;
+import java.util.Arrays;
 
 class StringAlgorithm {
 	private static int[] saNaive(int[] s) {
@@ -228,22 +228,22 @@ class StringAlgorithm {
 		return sais(s, upper);
 	}
 
-	public static int[] suffixArray(int[] s) {
+	public static int[] suffixArray(int[] s)
+	{
 		int n = s.length;
-		Integer[] idx = new Integer[n];
-		for (int i = 0; i < n; i++) {
-			idx[i] = i;
-		}
-		java.util.Arrays.sort(idx, (l, r) -> s[l] - s[r]);
-		int[] s2 = new int[n];
-		int now = 0;
-		for (int i = 0; i < n; i++) {
-			if (i > 0 && s[idx[i - 1]] != s[idx[i]]) {
-				now++;
+		int[] vals = Arrays.copyOf(s, n);
+		java.util.Arrays.sort(vals);
+		int p = 1;
+		for(int i = 1;i < n;i++){
+			if(vals[i] != vals[i-1]){
+				vals[p++] = vals[i];
 			}
-			s2[idx[i]] = now;
 		}
-		return sais(s2, now);
+		int[] s2 = new int[n];
+		for(int i = 0;i < n;i++){
+			s2[i] = java.util.Arrays.binarySearch(vals, 0, p, s[i]);
+		}
+		return sais(s2, p);
 	}
 
 	public static int[] suffixArray(char[] s) {
