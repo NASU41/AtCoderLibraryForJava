@@ -1,11 +1,13 @@
+import java.util.stream.IntStream;
+
 class StringAlgorithm {
 	private static int[] saNaive(int[] s) {
 		int n = s.length;
-		Integer[] _sa = new Integer[n];
-		for (int i = 0; i < n; i++) {
-			_sa[i] = i;
+		int[] sa = new int[n];
+		for(int i = 0;i < n;i++){
+			sa[i] = i;
 		}
-		java.util.Arrays.sort(_sa, (l, r) -> {
+		insertionsortUsingComparator(sa, (l, r) -> {
 			while (l < n && r < n) {
 				if (s[l] != s[r]) return s[l] - s[r];
 				l++;
@@ -13,18 +15,14 @@ class StringAlgorithm {
 			}
 			return -(l - r);
 		});
-		int[] sa = new int[n];
-		for (int i = 0; i < n; i++) {
-			sa[i] = _sa[i];
-		}
 		return sa;
 	}
 
-	private static int[] saDoubling(int[] s) {
+	public static int[] saDoubling(int[] s) {
 		int n = s.length;
-		Integer[] _sa = new Integer[n];
-		for (int i = 0; i < n; i++) {
-			_sa[i] = i;
+		int[] sa = new int[n];
+		for(int i = 0;i < n;i++){
+			sa[i] = i;
 		}
 		int[] rnk = s;
 		int[] tmp = new int[n];
@@ -32,27 +30,37 @@ class StringAlgorithm {
 		for (int k = 1; k < n; k *= 2) {
 			final int _k = k;
 			final int[] _rnk = rnk;
-			java.util.Comparator<Integer> cmp = (x, y) -> {
+			java.util.function.IntBinaryOperator cmp = (x, y) -> {
 				if (_rnk[x] != _rnk[y]) return _rnk[x] - _rnk[y];
 				int rx = x + _k < n ? _rnk[x + _k] : -1;
 				int ry = y + _k < n ? _rnk[y + _k] : -1;
 				return rx - ry;
 			};
-			java.util.Arrays.sort(_sa, cmp);
-			tmp[_sa[0]] = 0;
+			insertionsortUsingComparator(sa, cmp);
+			tmp[sa[0]] = 0;
 			for (int i = 1; i < n; i++) {
-				tmp[_sa[i]] = tmp[_sa[i - 1]] + (cmp.compare(_sa[i - 1], _sa[i]) < 0 ? 1 : 0);
+				tmp[sa[i]] = tmp[sa[i - 1]] + (cmp.applyAsInt(sa[i - 1], sa[i]) < 0 ? 1 : 0);
 			}
 			int[] buf = tmp;
 			tmp = rnk;
 			rnk = buf;
 		}
-
-		int[] sa = new int[n];
-		for (int i = 0; i < n; i++) {
-			sa[i] = _sa[i];
-		}
 		return sa;
+	}
+
+	private static void insertionsortUsingComparator(int[] a, java.util.function.IntBinaryOperator comparator) {
+		final int n = a.length;
+		for (int i = 1; i < n; i++) {
+			final int tmp = a[i];
+			if (comparator.applyAsInt(a[i - 1], tmp) > 0) {
+				int j = i;
+				do {
+					a[j] = a[j - 1];
+					j--;
+				} while (j > 0 && comparator.applyAsInt(a[j - 1], tmp) > 0);
+				a[j] = tmp;
+			}
+		}
 	}
 
 	private static final int THRESHOLD_NAIVE = 10;
