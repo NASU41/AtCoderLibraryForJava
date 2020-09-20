@@ -247,23 +247,54 @@ class LazySegTree<S, F> {
 
     @Override
     public String toString() {
-        return toString(1, 0);
+        return toSimpleString();
     }
 
-    private String toString(int k, int sp) {
-        if (k >= N) return indent(sp) + Dat[k];
+    private S[] simulatePushAll() {
+        S[] simDat = java.util.Arrays.copyOf(Dat, 2 * N);
+        F[] simLaz = java.util.Arrays.copyOf(Laz, 2 * N);
+        for (int k = 1; k < N; k++) {
+            if (simLaz[k] == Id) continue;
+            int lk = k << 1 | 0, rk = k << 1 | 1;
+            simDat[lk] = Mapping.apply(simLaz[k], simDat[lk]);
+            simDat[rk] = Mapping.apply(simLaz[k], simDat[rk]);
+            if (lk < N) simLaz[lk] = Composition.apply(simLaz[k], simLaz[lk]);
+            if (rk < N) simLaz[rk] = Composition.apply(simLaz[k], simLaz[rk]);
+            simLaz[k] = Id;
+        }
+        return simDat;
+    }
+
+    public String toDetailedString() {
+        return toDetailedString(1, 0, simulatePushAll());
+    }
+
+    private String toDetailedString(int k, int sp, S[] dat) {
+        if (k >= N) return indent(sp) + dat[k];
         String s = "";
-        s += toString(k << 1 | 1, sp + indent);
+        s += toDetailedString(k << 1 | 1, sp + indent, dat);
         s += "\n";
-        s += indent(sp) + Dat[k] + "/" + Laz[k];
+        s += indent(sp) + dat[k];
         s += "\n";
-        s += toString(k << 1 | 0, sp + indent);
+        s += toDetailedString(k << 1 | 0, sp + indent, dat);
         return s;
     }
 
     private static String indent(int n) {
         StringBuilder sb = new StringBuilder();
         while (n --> 0) sb.append(' ');
+        return sb.toString();
+    }
+
+    public String toSimpleString() {
+        S[] dat = simulatePushAll();
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        for (int i = 0; i < N; i++) {
+            sb.append(dat[i + N]);
+            if (i < N - 1) sb.append(',').append(' ');
+        }
+        sb.append(']');
         return sb.toString();
     }
 }
