@@ -21,4 +21,4 @@ $$ x \equiv r[i] \mod m[i] $$ を解きます.
 public static long floor_sum(long n, long m, long a, long b)
 ```
 
-$ \signa_{i=0}^{n-1} floor(\frac{a*i+b}{m}) $を返します.
+$ \sigma_{i=0}^{n-1} floor(\frac{a*i+b}{m}) $を返します.

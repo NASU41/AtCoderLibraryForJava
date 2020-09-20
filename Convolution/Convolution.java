@@ -4,7 +4,7 @@
  * @verified https://atcoder.jp/contests/practice2/tasks/practice2_f
  * @verified https://judge.yosupo.jp/problem/convolution_mod_1000000007
  */
-public class Convolution {
+class Convolution {
     /**
      * Find a primitive root.
      *

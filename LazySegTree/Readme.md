@@ -77,7 +77,7 @@ public S prod(int l, int r)
 
 `op(a[l], ..., a[r - 1])` を、モノイドの性質を満たしていると仮定して計算します。`l = r` のときは単位元 `e` を返します。
 
-計算量: $O(n)$
+計算量: $O(\log n)$
 
 制約: `0 <= l <= r <= n`
 
@@ -158,3 +158,7 @@ fが単調だとすれば、`f(op(a[l], a[l + 1], ..., a[r - 1])) = true` とな
 計算量
 
 $O(\log n)$
+
+## 使用例
+
+[AtCoder Library Practice Contest K - Range Affine Range Sum](https://atcoder.jp/contests/practice2/submissions/16646083)
