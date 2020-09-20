@@ -151,23 +151,38 @@ class SegTree<S> {
 
     @Override
     public String toString() {
-        return toString(1, 0);
+        return toSimpleString();
     }
 
-    private String toString(int k, int sp) {
-        if (k >= N) return indent(sp) + Dat[k];
+    public String toDetailedString() {
+        return toDetailedString(1, 0);
+    }
+
+    private String toDetailedString(int k, int sp) {
+        if (k >= N) return indent(sp) + data[k];
         String s = "";
-        s += toString(k << 1 | 1, sp + indent);
+        s += toDetailedString(k << 1 | 1, sp + indent);
         s += "\n";
-        s += indent(sp) + Dat[k];
+        s += indent(sp) + data[k];
         s += "\n";
-        s += toString(k << 1 | 0, sp + indent);
+        s += toDetailedString(k << 1 | 0, sp + indent);
         return s;
     }
 
     private static String indent(int n) {
         StringBuilder sb = new StringBuilder();
         while (n --> 0) sb.append(' ');
+        return sb.toString();
+    }
+
+    public String toSimpleString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        for (int i = 0; i < N; i++) {
+            sb.append(data[i + N]);
+            if (i < N - 1) sb.append(',').append(' ');
+        }
+        sb.append(']');
         return sb.toString();
     }
 }
