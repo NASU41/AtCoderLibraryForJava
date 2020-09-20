@@ -51,7 +51,7 @@ class TwoSAT {
     }
 
     private void rangeCheck(int x) {
-        if (0 < x || x >= n) {
+        if (x < 0 || x >= n) {
             throw new IndexOutOfBoundsException(
                 String.format("Index %d out of bounds for length %d", x, n)
             );
