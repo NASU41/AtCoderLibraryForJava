@@ -26,7 +26,7 @@ class StringAlgorithm {
 		for (int i = 0; i < n; i++) {
 			_sa[i] = i;
 		}
-		int[] rnk = s;
+		int[] rnk = java.util.Arrays.copyOf(s, n);
 		int[] tmp = new int[n];
 
 		for (int k = 1; k < n; k *= 2) {
