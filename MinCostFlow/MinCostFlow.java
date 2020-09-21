@@ -74,7 +74,7 @@ class MinCostFlow {
         return minCostFlow(s, t, INF);
     }
 
-    public long[] minCostFlow(int s, int t, long flowLimit) {
+    public long[] minCostMaxFlow(int s, int t, long flowLimit) {
         rangeCheck(s, 0, n);
         rangeCheck(t, 0, n);
         if (s == t) {
