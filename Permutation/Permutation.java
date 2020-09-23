@@ -1,4 +1,8 @@
-class Permutation implements java.util.Iterator<int[]> {
+/*
+* Verified
+* https://atcoder.jp/contests/abc054/submissions/16977824
+*/
+class Permutation implements java.util.Iterator<int[]>, Iterable<int[]> {
     private int[] next;
 
     public Permutation(int n) {
@@ -15,6 +19,11 @@ class Permutation implements java.util.Iterator<int[]> {
         int[] r = next.clone();
         next = nextPermutation(next);
         return r;
+    }
+
+    @Override
+    public java.util.Iterator<int[]> iterator() {
+        return this;
     }
 
     public static int[] nextPermutation(int[] a) {

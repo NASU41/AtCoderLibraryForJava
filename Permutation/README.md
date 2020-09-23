@@ -4,6 +4,16 @@
 
 $N$が与えられたとき，長さ$N$の順列を辞書順に列挙することができます．
 
+また，拡張 for 文によるイテレーションをサポートしています．
+以下のイテレーションは，時間計算量 $O(N * N!)$で動作します．
+
+```
+Permutation perm = new Permutation(n);
+for (int[] p : perm) {
+    // code here
+}
+```
+
 ## コンストラクタ
 
 ### Permutation
@@ -31,6 +41,14 @@ public int[] next()
 ```
 
 イテレータの後続の要素を取得します．計算量 $O(N)$
+
+### iterator
+
+```java
+public Iterator<int[]> iterator()
+```
+
+順列を列挙するイテレータを取得します．
 
 ### nextPermutation
 
