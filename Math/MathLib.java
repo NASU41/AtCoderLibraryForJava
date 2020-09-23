@@ -22,13 +22,16 @@ class MathLib{
         return new long[]{s,m0};
     }
 
-    public static long pow_mod(long x, long n, long m){
-        assert(n >= 0 && m >= 1);
-        long ans = 1;
+    public static long pow_mod(long x, long n, int m){
+        assert n >= 0;
+        assert m >= 1;
+        if(m == 1)return 0L;
+        x = safe_mod(x, m);
+        long ans = 1L;
         while(n > 0){
-            if(n%2==1) ans = (ans * x) % m;
+            if((n&1) == 1) ans = (ans * x) % m;
             x = (x*x) % m;
-            n /= 2;
+            n >>>= 1;
         }
         return ans;
     }
