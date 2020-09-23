@@ -71,7 +71,7 @@ class MinCostFlow {
     private long addCost;
 
     public long[] minCostMaxFlow(int s, int t) {
-        return minCostFlow(s, t, INF);
+        return minCostMaxFlow(s, t, INF);
     }
 
     public long[] minCostMaxFlow(int s, int t, long flowLimit) {
