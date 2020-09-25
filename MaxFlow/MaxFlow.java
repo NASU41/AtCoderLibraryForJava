@@ -98,6 +98,7 @@ class MaxFlow {
                 long d = dinicDFS(t, s, flowLimit - flow, iter, level);
                 if (d <= 0) break;
                 flow += d;
+                if (flow == flowLimit) return flow;
             }
         }
     }
