@@ -187,7 +187,7 @@ class MaxFlow {
         return reachable;
     }
 
-    private void rangeCheck(int i, int minInlusive, int maxExclusive) {
+    private void rangeCheck(int i, int minInclusive, int maxExclusive) {
         if (i < 0 || i >= maxExclusive) {
             throw new IndexOutOfBoundsException(
                 String.format("Index %d out of bounds for length %d", i, maxExclusive)
@@ -195,7 +195,7 @@ class MaxFlow {
         }
     }
 
-    private void nonNegativeCheck(long cap, java.lang.String attribute) {
+    private void nonNegativeCheck(long cap, String attribute) {
         if (cap < 0) {
             throw new IllegalArgumentException(
                 String.format("%s %d is negative.", attribute, cap)
