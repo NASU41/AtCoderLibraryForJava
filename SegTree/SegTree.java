@@ -140,4 +140,49 @@ class SegTree<S> {
             );
         }
     }
+
+    // **************** DEBUG **************** //
+
+    private int indent = 6;
+
+    public void setIndent(int newIndent) {
+        this.indent = newIndent;
+    }
+
+    @Override
+    public String toString() {
+        return toSimpleString();
+    }
+
+    public String toDetailedString() {
+        return toDetailedString(1, 0);
+    }
+
+    private String toDetailedString(int k, int sp) {
+        if (k >= N) return indent(sp) + data[k];
+        String s = "";
+        s += toDetailedString(k << 1 | 1, sp + indent);
+        s += "\n";
+        s += indent(sp) + data[k];
+        s += "\n";
+        s += toDetailedString(k << 1 | 0, sp + indent);
+        return s;
+    }
+
+    private static String indent(int n) {
+        StringBuilder sb = new StringBuilder();
+        while (n --> 0) sb.append(' ');
+        return sb.toString();
+    }
+
+    public String toSimpleString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        for (int i = 0; i < N; i++) {
+            sb.append(data[i + N]);
+            if (i < N - 1) sb.append(',').append(' ');
+        }
+        sb.append(']');
+        return sb.toString();
+    }
 }

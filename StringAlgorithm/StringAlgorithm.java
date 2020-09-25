@@ -1,11 +1,13 @@
+import java.util.Arrays;
+
 class StringAlgorithm {
 	private static int[] saNaive(int[] s) {
 		int n = s.length;
-		Integer[] _sa = new Integer[n];
-		for (int i = 0; i < n; i++) {
-			_sa[i] = i;
+		int[] sa = new int[n];
+		for(int i = 0;i < n;i++){
+			sa[i] = i;
 		}
-		java.util.Arrays.sort(_sa, (l, r) -> {
+		insertionsortUsingComparator(sa, (l, r) -> {
 			while (l < n && r < n) {
 				if (s[l] != s[r]) return s[l] - s[r];
 				l++;
@@ -13,50 +15,81 @@ class StringAlgorithm {
 			}
 			return -(l - r);
 		});
-		int[] sa = new int[n];
-		for (int i = 0; i < n; i++) {
-			sa[i] = _sa[i];
-		}
 		return sa;
 	}
 
 	private static int[] saDoubling(int[] s) {
 		int n = s.length;
-		Integer[] _sa = new Integer[n];
-		for (int i = 0; i < n; i++) {
-			_sa[i] = i;
+		int[] sa = new int[n];
+		for(int i = 0;i < n;i++){
+			sa[i] = i;
 		}
-		int[] rnk = s;
+		int[] rnk = java.util.Arrays.copyOf(s, n);
 		int[] tmp = new int[n];
 
 		for (int k = 1; k < n; k *= 2) {
 			final int _k = k;
 			final int[] _rnk = rnk;
-			java.util.Comparator<Integer> cmp = (x, y) -> {
+			java.util.function.IntBinaryOperator cmp = (x, y) -> {
 				if (_rnk[x] != _rnk[y]) return _rnk[x] - _rnk[y];
 				int rx = x + _k < n ? _rnk[x + _k] : -1;
 				int ry = y + _k < n ? _rnk[y + _k] : -1;
 				return rx - ry;
 			};
-			java.util.Arrays.sort(_sa, cmp);
-			tmp[_sa[0]] = 0;
+			mergesortUsingComparator(sa, cmp);
+			tmp[sa[0]] = 0;
 			for (int i = 1; i < n; i++) {
-				tmp[_sa[i]] = tmp[_sa[i - 1]] + (cmp.compare(_sa[i - 1], _sa[i]) < 0 ? 1 : 0);
+				tmp[sa[i]] = tmp[sa[i - 1]] + (cmp.applyAsInt(sa[i - 1], sa[i]) < 0 ? 1 : 0);
 			}
 			int[] buf = tmp;
 			tmp = rnk;
 			rnk = buf;
 		}
-
-		int[] sa = new int[n];
-		for (int i = 0; i < n; i++) {
-			sa[i] = _sa[i];
-		}
 		return sa;
 	}
 
-	private static final int THRESHOLD_NAIVE = 10;
-	private static final int THRESHOLD_DOUBLING = 40;
+	private static void insertionsortUsingComparator(int[] a, java.util.function.IntBinaryOperator comparator) {
+		final int n = a.length;
+		for (int i = 1; i < n; i++) {
+			final int tmp = a[i];
+			if (comparator.applyAsInt(a[i - 1], tmp) > 0) {
+				int j = i;
+				do {
+					a[j] = a[j - 1];
+					j--;
+				} while (j > 0 && comparator.applyAsInt(a[j - 1], tmp) > 0);
+				a[j] = tmp;
+			}
+		}
+	}
+
+	private static void mergesortUsingComparator(int[] a, java.util.function.IntBinaryOperator comparator) {
+		final int n = a.length;
+		final int[] work = new int[n];
+		for (int block = 1; block <= n; block <<= 1) {
+			final int block2 = block << 1;
+			for (int l = 0, max = n - block; l < max; l += block2) {
+				int m = l + block;
+				int r = Math.min(l + block2, n);
+				System.arraycopy(a, l, work, 0, block);
+				for (int i = l, wi = 0, ti = m;; i++) {
+					if (ti == r) {
+						System.arraycopy(work, wi, a, i, block - wi);
+						break;
+					}
+					if (comparator.applyAsInt(work[wi], a[ti]) > 0) {
+						a[i] = a[ti++];
+					} else {
+						a[i] = work[wi++];
+						if (wi == block) break;
+					}
+				}
+			}
+		}
+	}
+
+	private static final int THRESHOLD_NAIVE = 50;
+	private static final int THRESHOLD_DOUBLING = 0;
 
 	private static int[] sais(int[] s, int upper) {
 		int n = s.length;
@@ -72,9 +105,9 @@ class StringAlgorithm {
 		if (n < THRESHOLD_NAIVE) {
 			return saNaive(s);
 		}
-		if (n < THRESHOLD_DOUBLING) {
-			return saDoubling(s);
-		}
+//		if (n < THRESHOLD_DOUBLING) {
+//			return saDoubling(s);
+//		}
 
 		int[] sa = new int[n];
 		boolean[] ls = new boolean[n];
@@ -195,22 +228,22 @@ class StringAlgorithm {
 		return sais(s, upper);
 	}
 
-	public static int[] suffixArray(int[] s) {
+	public static int[] suffixArray(int[] s)
+	{
 		int n = s.length;
-		Integer[] idx = new Integer[n];
-		for (int i = 0; i < n; i++) {
-			idx[i] = i;
-		}
-		java.util.Arrays.sort(idx, (l, r) -> s[l] - s[r]);
-		int[] s2 = new int[n];
-		int now = 0;
-		for (int i = 0; i < n; i++) {
-			if (i > 0 && s[idx[i - 1]] != s[idx[i]]) {
-				now++;
+		int[] vals = Arrays.copyOf(s, n);
+		java.util.Arrays.sort(vals);
+		int p = 1;
+		for(int i = 1;i < n;i++){
+			if(vals[i] != vals[i-1]){
+				vals[p++] = vals[i];
 			}
-			s2[idx[i]] = now;
 		}
-		return sais(s2, now);
+		int[] s2 = new int[n];
+		for(int i = 0;i < n;i++){
+			s2[i] = java.util.Arrays.binarySearch(vals, 0, p, s[i]);
+		}
+		return sais(s2, p);
 	}
 
 	public static int[] suffixArray(char[] s) {

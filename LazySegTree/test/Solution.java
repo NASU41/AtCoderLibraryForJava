@@ -1,3 +1,79 @@
+package test;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Solution {
+    static final int TEST_CASE_NUM = Gen.TESTCASE_NUM;
+    public static void main(String[] args) {
+        for (int i = 0; i < TEST_CASE_NUM; i++) {
+            String inputFileName = String.format("LazySegTree/test/in/testcase_%d", i);
+            String outputFileName = String.format("LazySegTree/test/out/out_%d", i);
+            try (Scanner sc = new Scanner(new File(inputFileName))) {
+                try (PrintWriter pw = new PrintWriter(new File(outputFileName))) {
+                    solve(sc, pw);
+                    sc.close();
+                    pw.flush();
+                    pw.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        }
+    }
+
+    static final long INF = 1l << 60;
+
+    public static void solve(Scanner sc, PrintWriter pw) {
+        final int N = Integer.parseInt(sc.next());
+        final int Q = Integer.parseInt(sc.next());
+        final Long[] A = new Long[N];
+        Arrays.setAll(A, i -> Long.parseLong(sc.next()));
+        LazySegTree<Long, Long> t = new LazySegTree<Long, Long>(A, Long::min, INF, (s, f) -> s + f, (s, f) -> s + f, 0l);
+        for (int i = 0; i < Q; i++) {
+            int queryType = Integer.parseInt(sc.next());
+            if (queryType == 0) {
+                int p = Integer.parseInt(sc.next());
+                int v = Integer.parseInt(sc.next());
+                t.set(p, (long) v);
+            } else if (queryType == 1) {
+                int p = Integer.parseInt(sc.next());
+                int v = Integer.parseInt(sc.next());
+                t.apply(p, (long) v);
+            } else if (queryType == 2) {
+                int l = Integer.parseInt(sc.next());
+                int r = Integer.parseInt(sc.next());
+                int v = Integer.parseInt(sc.next());
+                t.apply(l, r, (long) v);
+            } else if (queryType == 3) {
+                int p = Integer.parseInt(sc.next());
+                pw.println(t.get(p));
+            } else if (queryType == 4) {
+                int l = Integer.parseInt(sc.next());
+                int r = Integer.parseInt(sc.next());
+                long min = t.prod(l, r);
+                pw.println(min == INF ? "INF" : min);
+            } else if (queryType == 5) {
+                pw.println(t.allProd());
+            } else if (queryType == 6) {
+                int l = Integer.parseInt(sc.next());
+                int v = Integer.parseInt(sc.next());
+                pw.println(t.maxRight(l, val -> val > v));
+            } else if (queryType == 7) {
+                int r = Integer.parseInt(sc.next());
+                int v = Integer.parseInt(sc.next());
+                pw.println(t.minLeft(r, val -> val > v));
+            } else {
+                throw new AssertionError();
+            }
+        }
+    }
+}
+
 /**
  * TODO: verify {@link LazySegTree#maxRight} and {@link LazySegTree#minLeft}
  * 

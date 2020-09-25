@@ -16,6 +16,8 @@ class TwoSAT {
     }
 
     public void addClause(int x, boolean f, int y, boolean g) {
+        rangeCheck(x);
+        rangeCheck(y);
         scc.addEdge(x << 1 | (f ? 0 : 1), y << 1 | (g ? 1 : 0));
         scc.addEdge(y << 1 | (g ? 0 : 1), x << 1 | (f ? 1 : 0));
     }
@@ -46,6 +48,14 @@ class TwoSAT {
         }
         if (existsAnswer) return answer;
         return null;
+    }
+
+    private void rangeCheck(int x) {
+        if (x < 0 || x >= n) {
+            throw new IndexOutOfBoundsException(
+                String.format("Index %d out of bounds for length %d", x, n)
+            );
+        }
     }
 
     private static final class EdgeList {
