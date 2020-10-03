@@ -5,8 +5,8 @@ class Bridge{
 
 	public static boolean[] bridges(int[][][] graphWithEdgeInfo){
 		int edgeCount = 0;
-		for(int[][] v:graphWithEdgeInfo)edgeCount += v.length;
-		return bridges(graphWithEdgeInfo, edgeCount);
+		for(int[][] row:graphWithEdgeInfo)edgeCount += row.length;
+		return bridges(graphWithEdgeInfo, edgeCount/2);
 	}
 
 	public static boolean[] bridges(int[][][] graphWithEdgeInfo, int edgeCount){
