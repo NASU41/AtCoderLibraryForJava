@@ -16,6 +16,10 @@ class FenwickTree{
         build(data);
     }
 
+    public void set(int p, long x){
+        add(p, x - get(p));
+    }
+
     public void add(int p, long x){
         assert(0<=p && p<_n);
         p++;
@@ -27,6 +31,10 @@ class FenwickTree{
     public long sum(int l, int r){
         assert(0<=l && l<=r && r<=_n);
         return sum(r)-sum(l);
+    }
+
+    public long get(int p){
+        return sum(p, p+1);
     }
 
     private long sum(int r){
