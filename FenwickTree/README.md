@@ -32,6 +32,19 @@ public void add(int p, long x)
 配列の第$p$要素に$x$を加える. すなわち, `a[p] += x` のこと.
 計算量: $O(\log N)$
 
+### set
+```java
+public void set(int p, long x)
+```
+配列の第$p$要素を$x$に変更する. すなわち, `a[p] = x` のこと.
+計算量: $O(\log N)$
+
+### get
+```java
+public long get(int p)
+```
+配列の第$p$要素を取得する. 計算量: $O(\log n)$
+
 ### sum
 ```java
 public long sum(int l, int r)
