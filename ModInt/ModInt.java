@@ -1,28 +1,39 @@
 /**
- * @verified 
+ * @verified
  * <ul>
- * <li> https://atcoder.jp/contests/arc050/tasks/arc050_c
- * <li> https://atcoder.jp/contests/abc129/tasks/abc129_f
+ * <li> https://atcoder.jp/contests/arc050/tasks/arc050_c </li>
+ * <li> https://atcoder.jp/contests/abc129/tasks/abc129_f </li>
+ * <li> https://atcoder.jp/contests/arc012/tasks/arc012_4 </li>
  * </ul>
  */
 class ModIntFactory {
     private final ModArithmetic ma;
     private final int mod;
 
+    private final boolean usesMontgomery;
+    private final ModArithmetic.ModArithmeticMontgomery maMontgomery;
+
     public ModIntFactory(int mod) {
         this.ma = ModArithmetic.of(mod);
+        this.usesMontgomery = ma instanceof ModArithmetic.ModArithmeticMontgomery;
+        this.maMontgomery = usesMontgomery ? (ModArithmetic.ModArithmeticMontgomery) ma : null;
         this.mod = mod;
     }
 
     public ModInt create(long value) {
         if ((value %= mod) < 0) value += mod;
-        if (ma instanceof ModArithmetic.ModArithmeticMontgomery) {
-            return new ModInt(((ModArithmetic.ModArithmeticMontgomery) ma).generate(value));
+        if (usesMontgomery) {
+            return new ModInt(maMontgomery.generate(value));
+        } else {
+            return new ModInt((int) value);
         }
-        return new ModInt((int) value);
     }
 
-    class ModInt {
+    public int getMod() {
+        return mod;
+    }
+
+    public class ModInt {
         private int value;
         private ModInt(int value) {
             this.value = value;
@@ -170,19 +181,43 @@ class ModIntFactory {
         }
     }
 
-    private interface ModArithmetic {
-        public int mod();
-        public int remainder(long value);
-        public int add(int a, int b);
-        public int sub(int a, int b);
-        public int mul(int a, int b);
-        public default int div(int a, int b) {
+    private static abstract class ModArithmetic {
+        abstract int mod();
+        abstract int remainder(long value);
+        abstract int add(int a, int b);
+        abstract int sub(int a, int b);
+        abstract int mul(int a, int b);
+        int div(int a, int b) {
             return mul(a, inv(b));
         }
-        public int inv(int a);
-        public int pow(int a, long b);
+        int inv(int a) {
+            int b = mod();
+            long u = 1, v = 0;
+            while (b >= 1) {
+                int t = a / b;
+                a -= t * b;
+                int tmp1 = a; a = b; b = tmp1;
+                u -= t * v;
+                long tmp2 = u; u = v; v = tmp2;
+            }
+            if (a != 1) {
+                throw new ArithmeticException("divide by zero");
+            }
+            return remainder(u);
+        }
+        int pow(int a, long b) {
+            if (b < 0) throw new ArithmeticException("negative power");
+            int r = 1;
+            int x = a;
+            while (b > 0) {
+                if ((b & 1) == 1) r = mul(r, x);
+                x = mul(x, x);
+                b >>= 1;
+            }
+            return r;
+        }
     
-        public static ModArithmetic of(int mod) {
+        static ModArithmetic of(int mod) {
             if (mod <= 0) {
                 throw new IllegalArgumentException();
             } else if (mod == 1) {
@@ -199,139 +234,65 @@ class ModIntFactory {
                 return new ModArithmeticBarrett(mod);
             }
         }
-    
-        static final class ModArithmetic1 implements ModArithmetic {
-            public int mod() {return 1;}
-            public int remainder(long value) {return 0;}
-            public int add(int a, int b) {return 0;}
-            public int sub(int a, int b) {return 0;}
-            public int mul(int a, int b) {return 0;}
-            public int inv(int a) {throw new ArithmeticException("divide by zero");}
-            public int pow(int a, long b) {return 0;}
+
+        private static final class ModArithmetic1 extends ModArithmetic {
+            int mod() {return 1;}
+            int remainder(long value) {return 0;}
+            int add(int a, int b) {return 0;}
+            int sub(int a, int b) {return 0;}
+            int mul(int a, int b) {return 0;}
+            int pow(int a, long b) {return 0;}
         }
-        static final class ModArithmetic2 implements ModArithmetic {
-            public int mod() {return 2;}
-            public int remainder(long value) {return (int) (value & 1);}
-            public int add(int a, int b) {return a ^ b;}
-            public int sub(int a, int b) {return a ^ b;}
-            public int mul(int a, int b) {return a & b;}
-            public int inv(int a) {
-                if (a == 0) throw new ArithmeticException("divide by zero");
-                return a;
-            }
-            public int pow(int a, long b) {
-                if (b == 0) return 1;
-                return a;
-            }
+        private static final class ModArithmetic2 extends ModArithmetic {
+            int mod() {return 2;}
+            int remainder(long value) {return (int) (value & 1);}
+            int add(int a, int b) {return a ^ b;}
+            int sub(int a, int b) {return a ^ b;}
+            int mul(int a, int b) {return a & b;}
         }
-        static final class ModArithmetic998244353 implements ModArithmetic {
+        private static final class ModArithmetic998244353 extends ModArithmetic {
             private final int mod = 998244353;
-            public int mod() {
+            int mod() {
                 return mod;
             }
-            public int remainder(long value) {
+            int remainder(long value) {
                 return (int) ((value %= mod) < 0 ? value + mod : value);
             }
-            public int add(int a, int b) {
+            int add(int a, int b) {
                 int res = a + b;
                 return res >= mod ? res - mod : res;
             }
-            public int sub(int a, int b) {
+            int sub(int a, int b) {
                 int res = a - b;
                 return res < 0 ? res + mod : res;
             }
-            public int mul(int a, int b) {
+            int mul(int a, int b) {
                 return (int) (((long) a * b) % mod);
             }
-            public int inv(int a) {
-                int b = mod;
-                long u = 1, v = 0;
-                while (b >= 1) {
-                    long t = a / b;
-                    a -= t * b;
-                    int tmp1 = a; a = b; b = tmp1;
-                    u -= t * v;
-                    long tmp2 = u; u = v; v = tmp2;
-                }
-                u %= mod;
-                if (a != 1) {
-                    throw new ArithmeticException("divide by zero");
-                }
-                return (int) (u < 0 ? u + mod : u);
-            }
-            public int pow(int a, long b) {
-                if (b < 0) throw new ArithmeticException("negative power");
-                long res = 1;
-                long pow2 = a;
-                long idx = 1;
-                while (b > 0) {
-                    long lsb = b & -b;
-                    for (; lsb != idx; idx <<= 1) {
-                        pow2 = (pow2 * pow2) % mod;
-                    }
-                    res = (res * pow2) % mod;
-                    b ^= lsb;
-                }
-                return (int) res;
-            }
         }
-        static final class ModArithmetic1000000007 implements ModArithmetic {
+        private static final class ModArithmetic1000000007 extends ModArithmetic {
             private final int mod = 1000000007;
-            public int mod() {
+            int mod() {
                 return mod;
             }
-            public int remainder(long value) {
+            int remainder(long value) {
                 return (int) ((value %= mod) < 0 ? value + mod : value);
             }
-            public int add(int a, int b) {
+            int add(int a, int b) {
                 int res = a + b;
                 return res >= mod ? res - mod : res;
             }
-            public int sub(int a, int b) {
+            int sub(int a, int b) {
                 int res = a - b;
                 return res < 0 ? res + mod : res;
             }
-            public int mul(int a, int b) {
+            int mul(int a, int b) {
                 return (int) (((long) a * b) % mod);
             }
-            public int div(int a, int b) {
-                return mul(a, inv(b));
-            }
-            public int inv(int a) {
-                int b = mod;
-                long u = 1, v = 0;
-                while (b >= 1) {
-                    long t = a / b;
-                    a -= t * b;
-                    int tmp1 = a; a = b; b = tmp1;
-                    u -= t * v;
-                    long tmp2 = u; u = v; v = tmp2;
-                }
-                u %= mod;
-                if (a != 1) {
-                    throw new ArithmeticException("divide by zero");
-                }
-                return (int) (u < 0 ? u + mod : u);
-            }
-            public int pow(int a, long b) {
-                if (b < 0) throw new ArithmeticException("negative power");
-                long res = 1;
-                long pow2 = a;
-                long idx = 1;
-                while (b > 0) {
-                    long lsb = b & -b;
-                    for (; lsb != idx; idx <<= 1) {
-                        pow2 = (pow2 * pow2) % mod;
-                    }
-                    res = (res * pow2) % mod;
-                    b ^= lsb;
-                }
-                return (int) res;
-            }
         }
-        static final class ModArithmeticMontgomery extends ModArithmeticDynamic {
+        private static final class ModArithmeticMontgomery extends ModArithmeticDynamic {
             private final long negInv;
-            private final long r2, r3;
+            private final long r2;
     
             private ModArithmeticMontgomery(int mod) {
                 super(mod);
@@ -348,7 +309,6 @@ class ModIntFactory {
                 long r = (1l << 32) % mod;
                 this.negInv = inv;
                 this.r2 = (r * r) % mod;
-                this.r3 = (r2 * r) % mod;
             }
             private int generate(long x) {
                 return reduce(x * r2);
@@ -358,24 +318,23 @@ class ModIntFactory {
                 return (int) (x < mod ? x : x - mod);
             }
             @Override
-            public int remainder(long value) {
+            int remainder(long value) {
                 return generate((value %= mod) < 0 ? value + mod : value);
             }
             @Override
-            public int mul(int a, int b) {
+            int mul(int a, int b) {
                 return reduce((long) a * b);
             }
             @Override
-            public int inv(int a) {
-                a = super.inv(a);
-                return reduce(a * r3);
+            int inv(int a) {
+                return super.inv(reduce(a));
             }
             @Override
-            public int pow(int a, long b) {
+            int pow(int a, long b) {
                 return generate(super.pow(a, b));
             }
         }
-        static final class ModArithmeticBarrett extends ModArithmeticDynamic {
+        private static final class ModArithmeticBarrett extends ModArithmeticDynamic {
             private static final long mask = 0xffff_ffffl;
             private final long mh;
             private final long ml;
@@ -401,66 +360,35 @@ class ModIntFactory {
                 return (int) (x < mod ? x : x - mod);
             }
             @Override
-            public int remainder(long value) {
+            int remainder(long value) {
                 return (int) ((value %= mod) < 0 ? value + mod : value);
             }
             @Override
-            public int mul(int a, int b) {
+            int mul(int a, int b) {
                 return reduce((long) a * b);
             }
         }
-        static class ModArithmeticDynamic implements ModArithmetic {
+        private static class ModArithmeticDynamic extends ModArithmetic {
             final int mod;
-            public ModArithmeticDynamic(int mod) {
+            ModArithmeticDynamic(int mod) {
                 this.mod = mod;
             }
-            public int mod() {
+            int mod() {
                 return mod;
             }
-            public int remainder(long value) {
+            int remainder(long value) {
                 return (int) ((value %= mod) < 0 ? value + mod : value);
             }
-            public int add(int a, int b) {
+            int add(int a, int b) {
                 int sum = a + b;
                 return sum >= mod ? sum - mod : sum;
             }
-            public int sub(int a, int b) {
+            int sub(int a, int b) {
                 int sum = a - b;
                 return sum < 0 ? sum + mod : sum;
             }
-            public int mul(int a, int b) {
+            int mul(int a, int b) {
                 return (int) (((long) a * b) % mod);
-            }
-            public int inv(int a) {
-                int b = mod;
-                long u = 1, v = 0;
-                while (b >= 1) {
-                    long t = a / b;
-                    a -= t * b;
-                    int tmp1 = a; a = b; b = tmp1;
-                    u -= t * v;
-                    long tmp2 = u; u = v; v = tmp2;
-                }
-                u %= mod;
-                if (a != 1) {
-                    throw new ArithmeticException("divide by zero");
-                }
-                return (int) (u < 0 ? u + mod : u);
-            }
-            public int pow(int a, long b) {
-                if (b < 0) throw new ArithmeticException("negative power");
-                int res = 1;
-                int pow2 = a;
-                long idx = 1;
-                while (b > 0) {
-                    long lsb = b & -b;
-                    for (; lsb != idx; idx <<= 1) {
-                        pow2 = mul(pow2, pow2);
-                    }
-                    res = mul(res, pow2);
-                    b ^= lsb;
-                }
-                return res;
             }
         }
     }
