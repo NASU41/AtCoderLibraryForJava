@@ -1,9 +1,11 @@
 /**
  * @verified
  * <ul>
- * <li> https://atcoder.jp/contests/arc050/tasks/arc050_c </li>
- * <li> https://atcoder.jp/contests/abc129/tasks/abc129_f </li>
- * <li> https://atcoder.jp/contests/arc012/tasks/arc012_4 </li>
+ * <li> https://atcoder.jp/contests/m-solutions2019/tasks/m_solutions2019_c : (M = 1000000007)
+ * <li> https://atcoder.jp/contests/abc172/tasks/abc172_e : (M = 1000000007)
+ * <li> https://atcoder.jp/contests/abc129/tasks/abc129_f : (2 <= M <= 1000000000)
+ * <li> https://atcoder.jp/contests/arc050/tasks/arc050_c : (2 <= M <= 1000000000)
+ * <li> https://atcoder.jp/contests/arc012/tasks/arc012_4 : (1 <= M <= 1000000007)
  * </ul>
  */
 class ModIntFactory {
@@ -192,6 +194,7 @@ class ModIntFactory {
         }
         int inv(int a) {
             int b = mod();
+            if (b == 1) return 0;
             long u = 1, v = 0;
             while (b >= 1) {
                 int t = a / b;
