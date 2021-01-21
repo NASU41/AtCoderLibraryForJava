@@ -61,6 +61,24 @@ public ModInt create(long value)
 値 `value % mod` を持つ `ModInt` を生成します.
 計算量: $O(1)$
 
+```java
+public ModInt factorial(int i)
+```
+
+値 `(i!) % mod` を持つ `ModInt` を生成します.
+
+```java
+public ModInt permutation(int n, int r)
+```
+
+値 `n P r` を持つ `ModInt` を生成します.
+
+```java
+public ModInt combination(int n, int r)
+```
+
+値 `n C r` を持つ `ModInt` を生成します.
+
 ### ModIntFactory$ModInt
 
 #### mod

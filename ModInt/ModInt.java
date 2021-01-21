@@ -1,3 +1,7 @@
+import java.util.*;
+
+import java.util.ArrayList;
+
 /**
  * @verified
  * <ul>
@@ -6,6 +10,7 @@
  * <li> https://atcoder.jp/contests/abc129/tasks/abc129_f : (2 <= M <= 1000000000)
  * <li> https://atcoder.jp/contests/arc050/tasks/arc050_c : (2 <= M <= 1000000000)
  * <li> https://atcoder.jp/contests/arc012/tasks/arc012_4 : (1 <= M <= 1000000007)
+ * <li> https://atcoder.jp/contests/abc042/tasks/arc058_b : (M = 1000000007, combination ver.)
  * </ul>
  */
 class ModIntFactory {
@@ -15,11 +20,15 @@ class ModIntFactory {
     private final boolean usesMontgomery;
     private final ModArithmetic.ModArithmeticMontgomery maMontgomery;
 
+    private ArrayList<Integer> factorial;
+
     public ModIntFactory(int mod) {
         this.ma = ModArithmetic.of(mod);
         this.usesMontgomery = ma instanceof ModArithmetic.ModArithmeticMontgomery;
         this.maMontgomery = usesMontgomery ? (ModArithmetic.ModArithmeticMontgomery) ma : null;
         this.mod = mod;
+
+        this.factorial = new ArrayList<>();
     }
 
     public ModInt create(long value) {
@@ -29,6 +38,30 @@ class ModIntFactory {
         } else {
             return new ModInt((int) value);
         }
+    }
+
+    private void prepareFactorial(int max){
+        factorial.ensureCapacity(max+1);
+        if(factorial.size()==0) factorial.add(1);
+        for(int i=factorial.size(); i<=max; i++){
+            factorial.add(ma.mul(factorial.get(i-1), i));
+        }
+    }
+
+    public ModInt factorial(int i){
+        prepareFactorial(i);
+        return create(factorial.get(i));
+    }
+
+    public ModInt permutation(int n, int r){
+        if(n < 0 || r < 0 || n < r) return create(0);
+        prepareFactorial(n);
+        return create(ma.div(factorial.get(n), factorial.get(r)));
+    }
+    public ModInt combination(int n, int r){
+        if(n < 0 || r < 0 || n < r) return create(0);
+        prepareFactorial(n);
+        return create(ma.div(factorial.get(n), ma.mul(factorial.get(r),factorial.get(n-r))));
     }
 
     public int getMod() {

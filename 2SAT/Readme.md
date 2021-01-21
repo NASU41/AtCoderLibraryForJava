@@ -71,6 +71,14 @@ public void addNand(int x, boolean f, int y, boolean g)
 
 ならし $O(1)$
 
+### set
+
+```java
+public void set(int x, boolean f)
+```
+
+`(x[i] = f)` というクローズを足します。
+
 ### satisfiable
 
 ```java

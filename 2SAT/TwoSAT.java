@@ -29,6 +29,10 @@ class TwoSAT {
     public void addNand(int x, boolean f, int y, boolean g) {
         addClause(x, !f, y, !g);
     }
+    public void set(int x, boolean f){
+        addClause(x, f, x, f);
+    }
+
 
     public boolean satisfiable() {
         hasCalledSatisfiable = true;

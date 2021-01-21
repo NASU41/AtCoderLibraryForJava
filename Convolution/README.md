@@ -15,7 +15,7 @@ public static void main(String[] args) {
     int mod = 998244353;
     long[] a = { 1, 2, 3, 4, 5 };
     long[] b = { 6, 7, 8 };
-    // 畳み込みを計算しまqす。a.length + b.length - 1 の配列が帰ります。
+    // 畳み込みを計算します。a.length + b.length - 1 の配列が帰ります。
     long[] ret = Convolution.convolution(a, b, mod);
     System.out.println(Arrays.toString(ret));
 }
