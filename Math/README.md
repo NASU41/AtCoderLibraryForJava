@@ -22,3 +22,17 @@ public static long floor_sum(long n, long m, long a, long b)
 ```
 
 $ \sigma_{i=0}^{n-1} floor(\frac{a*i+b}{m}) $を返します.
+
+## gcd, lcm
+
+```java
+public static long gcd(long a, long b)
+public static long lcm(long a, long b)
+```
+二整数 a, b の最大公約数/最小公倍数を返します. 返り値は必ず非負整数になります.
+
+```java
+public static java.util.ArrayList<Long> divisors(int n)
+```
+整数nの約数を昇順に含んだリストを返します.
+計算量: O(√n)

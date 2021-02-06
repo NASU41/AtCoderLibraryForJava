@@ -22,6 +22,17 @@ class MathLib{
         return new long[]{s,m0};
     }
 
+    public static long gcd(long a, long b){
+        a = java.lang.Math.abs(a);
+        b = java.lang.Math.abs(b);
+        return inv_gcd(a, b)[0];       
+    }
+    public static long lcm(long a, long b){
+        a = java.lang.Math.abs(a);
+        b = java.lang.Math.abs(b);
+        return a / gcd(a,b) * b;
+    }
+
     public static long pow_mod(long x, long n, int m){
         assert n >= 0;
         assert m >= 1;
@@ -85,5 +96,19 @@ class MathLib{
         ans += (n - (x_max+a-1)/a) * y_max;
         ans += floor_sum(y_max, a, m, (a-x_max%a)%a);
         return ans;
+    }
+
+    public static java.util.ArrayList<Long> divisors(long n){
+        java.util.ArrayList<Long> divisors = new ArrayList<>();
+        java.util.ArrayList<Long> large = new ArrayList<>();
+
+        for(long i=1; i*i<=n; i++) if(n%i==0){
+            divisors.add(i);
+            if(i*i<n) large.add(n/i);
+        }
+        for(int p=large.size()-1; p>=0; p--){
+            divisors.add(large.get(p));
+        }
+        return divisors;
     }
 }
