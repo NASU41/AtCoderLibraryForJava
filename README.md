@@ -24,6 +24,7 @@
 
 また, ACL外のアルゴリズムについても必要に応じて実装を進めています.
 
+* [高速入出力](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/ContestIO)
 * [Multiset](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/Multiset)
 
 ## プログラムを編集したい方へ
