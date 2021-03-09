@@ -1,7 +1,4 @@
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
-class ContestScanner implements AutoCloseable {
+class ContestScanner {
     private final java.io.InputStream in;
     private final byte[] buffer = new byte[1024];
     private int ptr = 0;
@@ -182,13 +179,5 @@ class ContestScanner implements AutoCloseable {
             }
         }
         return mat;
-    }
-    @Override
-    public void close() {
-        try {
-            in.close();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 }
