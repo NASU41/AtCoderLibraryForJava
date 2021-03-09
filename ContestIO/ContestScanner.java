@@ -1,8 +1,16 @@
-class ContestScanner{
+import java.io.IOException;
+import java.io.UncheckedIOException;
+
+class ContestScanner implements AutoCloseable {
     private final java.io.InputStream in;
     private final byte[] buffer = new byte[1024];
     private int ptr = 0;
     private int buflen = 0;
+
+    private static final long LONG_MAX_TENTHS = 922337203685477580L;
+    private static final int LONG_MAX_LAST_DIGIT = 7;
+    private static final int LONG_MIN_LAST_DIGIT = 8;
+
     public ContestScanner(java.io.InputStream in){
         this.in = in;
     }
@@ -59,10 +67,42 @@ class ContestScanner{
         if (b < '0' || '9' < b) {
             throw new NumberFormatException();
         }
-        while(true){
+        while (true) {
             if ('0' <= b && b <= '9') {
-                n *= 10;
-                n += b - '0';
+                int digit = b - '0';
+                if (n >= LONG_MAX_TENTHS) {
+                    if (n == LONG_MAX_TENTHS) {
+                        if (minus) {
+                            if (digit <= LONG_MIN_LAST_DIGIT) {
+                                n = -n * 10 - digit;
+                                b = readByte();
+                                if (!isPrintableChar(b)) {
+                                    return n;
+                                } else if (b < '0' || '9' < b) {
+                                    throw new NumberFormatException(
+                                        String.format("%d%s... is not number", n, Character.toString(b))
+                                    );
+                                }
+                            }
+                        } else {
+                            if (digit <= LONG_MAX_LAST_DIGIT) {
+                                n = n * 10 + digit;
+                                b = readByte();
+                                if (!isPrintableChar(b)) {
+                                    return n;
+                                } else if (b < '0' || '9' < b) {
+                                    throw new NumberFormatException(
+                                        String.format("%d%s... is not number", n, Character.toString(b))
+                                    );
+                                }
+                            }
+                        }
+                    }
+                    throw new ArithmeticException(
+                        String.format("%s%d%d... overflows long.", minus ? "-" : "", n, digit)
+                    );
+                }
+                n = n * 10 + digit;
             }else if(b == -1 || !isPrintableChar(b)){
                 return minus ? -n : n;
             }else{
@@ -142,5 +182,13 @@ class ContestScanner{
             }
         }
         return mat;
+    }
+    @Override
+    public void close() {
+        try {
+            in.close();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
