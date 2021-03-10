@@ -1,48 +1,62 @@
 /**
- * @verified 
+ * @verified
  * - https://atcoder.jp/contests/practice2/tasks/practice2_e
  * - http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_6_B
  */
 class MinCostFlow {
-    public class WeightedCapEdge {
-        private final int from, to;
-        private long cap;
-        private long cost;
-        private final int rev;
-        WeightedCapEdge(int from, int to, long cap, long cost, int rev) {
-            this.from = from;
-            this.to = to;
-            this.cap = cap;
-            this.cost = cost;
-            this.rev = rev;
-        }
-        public int getFrom()  {return from;}
-        public int getTo()    {return to;}
-        public long getCap()  {return cap;}
-        public long getCost() {return cost;}
-        public long getFlow() {return g[to][rev].cap;}
+    private static final class InternalWeightedCapEdge {
+        final int to, rev;
+        long cap;
+        final long cost;
+        InternalWeightedCapEdge(int to, int rev, long cap, long cost) { this.to = to; this.rev = rev; this.cap = cap; this.cost = cost; }
     }
 
-    private static final long INF = Long.MAX_VALUE;
+    public static final class WeightedCapEdge {
+        public final int from, to;
+        public final long cap, flow, cost;
+        WeightedCapEdge(int from, int to, long cap, long flow, long cost) { this.from = from; this.to = to; this.cap = cap; this.flow = flow; this.cost = cost; }
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof WeightedCapEdge) {
+                WeightedCapEdge e = (WeightedCapEdge) o;
+                return from == e.from && to == e.to && cap == e.cap && flow == e.flow && cost == e.cost;
+            }
+            return false;
+        }
+    }
+
+    private static final class IntPair {
+        final int first, second;
+        IntPair(int first, int second) { this.first = first; this.second = second; }
+    }
+
+    public static final class FlowAndCost {
+        public final long flow, cost;
+        FlowAndCost(long flow, long cost) { this.flow = flow; this.cost = cost; }
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof FlowAndCost) {
+                FlowAndCost c = (FlowAndCost) o;
+                return flow == c.flow && cost == c.cost;
+            }
+            return false;
+        }
+    }
+
+    static final long INF = Long.MAX_VALUE;
 
     private final int n;
-    private int m;
-    private final java.util.ArrayList<WeightedCapEdge> edges;
-    private final int[] count;
-    private final WeightedCapEdge[][] g;
-    private final long[] potential;
+    private final java.util.ArrayList<IntPair> pos;
+    private final java.util.ArrayList<InternalWeightedCapEdge>[] g;
 
-    private final long[] dist;
-    private final WeightedCapEdge[] prev;
-
+    @SuppressWarnings("unchecked")
     public MinCostFlow(int n) {
         this.n = n;
-        this.edges = new java.util.ArrayList<>();
-        this.count = new int[n];
-        this.g = new WeightedCapEdge[n][];
-        this.potential = new long[n];
-        this.dist = new long[n];
-        this.prev = new WeightedCapEdge[n];
+        this.pos = new java.util.ArrayList<>();
+        this.g = new java.util.ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            this.g[i] = new java.util.ArrayList<>();
+        }
     }
 
     public int addEdge(int from, int to, long cap, long cost) {
@@ -50,144 +64,130 @@ class MinCostFlow {
         rangeCheck(to, 0, n);
         nonNegativeCheck(cap, "Capacity");
         nonNegativeCheck(cost, "Cost");
-        WeightedCapEdge e = new WeightedCapEdge(from, to, cap, cost, count[to]);
-        count[from]++; count[to]++;
-        edges.add(e);
-        return m++;
+        int m = pos.size();
+        pos.add(new IntPair(from, g[from].size()));
+        int fromId = g[from].size();
+        int toId = g[to].size();
+        if (from == to) toId++;
+        g[from].add(new InternalWeightedCapEdge(to, toId, cap, cost));
+        g[to].add(new InternalWeightedCapEdge(from, fromId, 0L, -cost));
+        return m;
     }
 
-    private void buildGraph() {
-        for (int i = 0; i < n; i++) {
-            g[i] = new WeightedCapEdge[count[i]];
-        }
-        int[] idx = new int[n];
-        for (WeightedCapEdge e : edges) {
-            g[e.to][idx[e.to]++] = new WeightedCapEdge(e.to, e.from, 0, -e.cost, idx[e.from]);
-            g[e.from][idx[e.from]++] = e;
-        }
+    private InternalWeightedCapEdge getInternalEdge(int i) {
+        return g[pos.get(i).first].get(pos.get(i).second);
     }
 
-    private long addFlow;
-    private long addCost;
+    private InternalWeightedCapEdge getInternalEdgeReversed(InternalWeightedCapEdge e) {
+        return g[e.to].get(e.rev);
+    }
+    
+    public WeightedCapEdge getEdge(int i) {
+        int m = pos.size();
+        rangeCheck(i, 0, m);
+        InternalWeightedCapEdge e = getInternalEdge(i);
+        InternalWeightedCapEdge re = getInternalEdgeReversed(e);
+        return new WeightedCapEdge(re.to, e.to, e.cap + re.cap, re.cap, e.cost);
+    }
 
-    public long[] minCostMaxFlow(int s, int t) {
+    public WeightedCapEdge[] getEdges() {
+        WeightedCapEdge[] res = new WeightedCapEdge[pos.size()];
+        java.util.Arrays.setAll(res, this::getEdge);
+        return res;
+    }
+
+    public FlowAndCost minCostMaxFlow(int s, int t) {
         return minCostFlow(s, t, INF);
     }
-
-    public long[] minCostFlow(int s, int t, long flowLimit) {
-        rangeCheck(s, 0, n);
-        rangeCheck(t, 0, n);
-        if (s == t) {
-            throw new IllegalArgumentException(String.format("s = t = %d", s));
-        }
-        nonNegativeCheck(flowLimit, "Flow");
-        buildGraph();
-        long flow = 0;
-        long cost = 0;
-        while (true) {
-            dijkstra(s, t, flowLimit - flow);
-            if (addFlow == 0) break;
-            flow += addFlow;
-            cost += addFlow * addCost;
-        }
-        return new long[]{flow, cost};
+    public FlowAndCost minCostFlow(int s, int t, long flowLimit) {
+        return minCostSlope(s, t, flowLimit).getLast();
     }
-
-    public java.util.ArrayList<long[]> minCostSlope(int s, int t) {
+    java.util.LinkedList<FlowAndCost> minCostSlope(int s, int t) {
         return minCostSlope(s, t, INF);
     }
 
-    public java.util.ArrayList<long[]> minCostSlope(int s, int t, long flowLimit) {
+    public java.util.LinkedList<FlowAndCost> minCostSlope(int s, int t, long flowLimit) {
         rangeCheck(s, 0, n);
         rangeCheck(t, 0, n);
         if (s == t) {
-            throw new IllegalArgumentException(String.format("s = t = %d", s));
+            throw new IllegalArgumentException(
+                String.format("%d and %d is the same vertex.", s, t)
+            );
         }
-        nonNegativeCheck(flowLimit, "Flow");
-        buildGraph();
-        java.util.ArrayList<long[]> slope = new java.util.ArrayList<>();
-        long prevCost = -1;
+        long[] dual = new long[n];
+        long[] dist = new long[n];
+        int[] pv = new int[n];
+        int[] pe = new int[n];
+        boolean[] vis = new boolean[n];
         long flow = 0;
-        long cost = 0;
-        while (true) {
-            slope.add(new long[]{flow, cost});
-            dijkstra(s, t, flowLimit - flow);
-            if (addFlow == 0) return slope;
-            flow += addFlow;
-            cost += addFlow * addCost;
-            if (addCost == prevCost) {
-                slope.remove(slope.size() - 1);
+        long cost = 0, prev_cost = -1;
+        java.util.LinkedList<FlowAndCost> result = new java.util.LinkedList<>();
+        result.addLast(new FlowAndCost(flow, cost));
+        while (flow < flowLimit) {
+            if (!dualRef(s, t, dual, dist, pv, pe, vis)) break;
+            long c = flowLimit - flow;
+            for (int v = t; v != s; v = pv[v]) {
+                c = Math.min(c, g[pv[v]].get(pe[v]).cap);
             }
-            prevCost = addCost;
+            for (int v = t; v != s; v = pv[v]) {
+                InternalWeightedCapEdge e = g[pv[v]].get(pe[v]);
+                e.cap -= c;
+                g[v].get(e.rev).cap += c;
+            }
+            long d = -dual[s];
+            flow += c;
+            cost += c * d;
+            if (prev_cost == d) {
+                result.removeLast();
+            }
+            result.addLast(new FlowAndCost(flow, cost));
+            prev_cost = cost;
         }
+        return result;
     }
 
-    private void dijkstra(int s, int t, long maxFlow) {
-        final class State implements Comparable<State> {
-            final int v;
-            final long d;
-            State(int v, long d) {this.v = v; this.d = d;}
-            public int compareTo(State s) {return d == s.d ? v - s.v : d > s.d ? 1 : -1;}
-        }
+    private boolean dualRef(int s, int t, long[] dual, long[] dist, int[] pv, int[] pe, boolean[] vis) {
         java.util.Arrays.fill(dist, INF);
-        dist[s] = 0;
+        java.util.Arrays.fill(pv, -1);
+        java.util.Arrays.fill(pe, -1);
+        java.util.Arrays.fill(vis, false);
+        class State implements Comparable<State> {
+            final long key;
+            final int to;
+            State(long key, int to) { this.key = key; this.to = to; }
+            public int compareTo(State q) {
+                return key > q.key ? 1 : -1;
+            }
+        };
         java.util.PriorityQueue<State> pq = new java.util.PriorityQueue<>();
-        pq.add(new State(s, 0l));
+        dist[s] = 0;
+        pq.add(new State(0L, s));
         while (pq.size() > 0) {
-            State st = pq.poll();
-            int u = st.v;
-            if (st.d != dist[u]) continue;
-            for (WeightedCapEdge e : g[u]) {
-                if (e.cap <= 0) continue;
-                int v = e.to;
-                long nextCost = dist[u] + e.cost + potential[u] - potential[v];
-                if (nextCost < dist[v]) {
-                    dist[v] = nextCost;
-                    prev[v] = e;
-                    pq.add(new State(v, dist[v]));
+            int v = pq.poll().to;
+            if (vis[v]) continue;
+            vis[v] = true;
+            if (v == t) break;
+            for (int i = 0, deg = g[v].size(); i < deg; i++) {
+                InternalWeightedCapEdge e = g[v].get(i);
+                if (vis[e.to] || e.cap == 0) continue;
+                long cost = e.cost - dual[e.to] + dual[v];
+                if (dist[e.to] - dist[v] > cost) {
+                    dist[e.to] = dist[v] + cost;
+                    pv[e.to] = v;
+                    pe[e.to] = i;
+                    pq.add(new State(dist[e.to], e.to));
                 }
             }
         }
-        if (dist[t] == INF) {
-            addFlow = 0;
-            addCost = INF;
-            return;
+        if (!vis[t]) {
+            return false;
         }
-        for (int i = 0; i < n; i++) {
-            potential[i] += dist[i];
-        }
-        addCost = 0;
-        addFlow = maxFlow;
-        for (int v = t; v != s;) {
-            WeightedCapEdge e = prev[v];
-            addCost += e.cost;
-            addFlow = java.lang.Math.min(addFlow, e.cap);
-            v = e.from;
-        }
-        for (int v = t; v != s;) {
-            WeightedCapEdge e = prev[v];
-            e.cap -= addFlow;
-            g[v][e.rev].cap += addFlow;
-            v = e.from;
-        }
-    }
 
-    public void clearFlow() {
-        java.util.Arrays.fill(potential, 0);
-        for (WeightedCapEdge e : edges) {
-            long flow = e.getFlow();
-            e.cap += flow;
-            g[e.to][e.rev].cap -= flow;
+        for (int v = 0; v < n; v++) {
+            if (!vis[v]) continue;
+            dual[v] -= dist[t] - dist[v];
         }
-    }
-
-    public WeightedCapEdge getEdge(int i) {
-        rangeCheck(i, 0, m);
-        return edges.get(i);
-    }
-
-    public java.util.ArrayList<WeightedCapEdge> getEdges() {
-        return edges;
+        return true;
     }
 
     private void rangeCheck(int i, int minInlusive, int maxExclusive) {
