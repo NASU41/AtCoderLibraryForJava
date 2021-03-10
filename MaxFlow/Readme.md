@@ -38,16 +38,10 @@ public void addEdge(int from, int to, long cap)
 public long maxFlow(int s, int t)
 // (2)
 public long flow(int s, int t, long flowLimit)
-// (3)
-public long fordFulkersonMaxFlow(int s, int t)
-// (4)
-public long fordFulkersonFlow(int s, int t, long flowLimit)
 ```
 
 - (1): 頂点 `s` から `t` へ流せる限り流し、流せた量を返す。Dinic のアルゴルズムを用います。
 - (2) 頂点 `s` から `t` へ流量 `flowLimit` に達するまで流せる限り流し、流せた量を返す。Dinic のアルゴルズムを用います。
-- (3) 頂点 `s` から `t` へ流せる限り流し、流せた量を返す。FordFulkerson のアルゴルズムを用います。
-- (4) 頂点 `s` から `t` へ流量 `flowLimit` に達するまで流せる限り流し、流せた量を返す。FordFulkerson のアルゴルズムを用います。
 - 複数回呼んだ場合は，前回流したフローからの差分が返ります。
 
 制約
@@ -60,7 +54,6 @@ public long fordFulkersonFlow(int s, int t, long flowLimit)
 
 - (1), (2) $O(\min(n^{2/3}*m, m^{3/2}))$ (辺の容量がすべて 1 の時)
 - (1), (2) $O(n^2*m)$
-- (3), (4) 返り値を `f` として，`O(f*m)`
 
 ### minCut
 
@@ -76,34 +69,34 @@ public boolean[] minCut(int s)
 
 ### getEdge / getEdges
 
-`getEdge`、`getEdges` の返り値には以下のメソッドを持つ `MaxFlow.CapEdge` 型が用いられています。
+`getEdge`、`getEdges` の返り値には以下のメンバを持つ `MaxFlow.CapEdge` 型が用いられています。
 
 ```java
 class CapEdge {
     // (1)
-    public int getFrom()
+    public final int from;
     // (2)
-    public int getTo()
+    public final int to;
     // (3)
-    public long getCap()
+    public final long cap;
     // (4)
-    public long getFlow()
+    public final long flow;
 };
 ```
 
-- (1): 始点を返します。計算量: $O(1)$
-- (2): 終点を返します。計算量: $O(1)$
-- (3): 現在の容量を返します。計算量: $O(1)$
+- (1): 辺の始点を返します。計算量: $O(1)$
+- (2): 辺の終点を返します。計算量: $O(1)$
+- (3): 辺の容量を返します。計算量: $O(1)$
 - (4): 現在の流量を返しまず。計算量: $O(1)$
 
 ```java
 // (1)
 public CapEdge getEdge(int i)
 // (2)
-public java.util.ArrayList<CapEdge> getEdges()
+public CapEdge[] getEdges()
 ```
 
-今の内部の辺の状態を返す。辺の順番は `addEdge` で追加された順番と同一。
+現在の内部の辺の状態を返す。辺の順番は `addEdge` で追加された順番と同一。
 
 制約
 
@@ -112,7 +105,7 @@ public java.util.ArrayList<CapEdge> getEdges()
 計算量
 
 - (1): $O(1)$
-- (2): $O(1)$
+- (2): $O(m)$
 
 ### changeEdge
 
@@ -132,4 +125,4 @@ $O(1)
 
 ## 使用例
 
-[AtCoder Library Practice Contest D - Maxflow](https://atcoder.jp/contests/practice2/submissions/16646346)
+[AtCoder Library Practice Contest D - Maxflow](https://atcoder.jp/contests/practice2/submissions/20808482)
