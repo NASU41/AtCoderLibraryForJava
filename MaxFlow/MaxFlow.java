@@ -6,8 +6,8 @@ class MaxFlow {
         InternalCapEdge(int to, int rev, long cap) { this.to = to; this.rev = rev; this.cap = cap; }
     }
     public static final class CapEdge {
-        final int from, to;
-        final long cap, flow;
+        public final int from, to;
+        public final long cap, flow;
         CapEdge(int from, int to, long cap, long flow) { this.from = from; this.to = to; this.cap = cap; this.flow = flow; }
         @Override
         public boolean equals(Object o) {
