@@ -60,10 +60,10 @@ class ContestPrinter extends java.io.PrintWriter{
             super.print(map.applyAsInt(array[i]));
             super.print(separator);
         }
-        super.println(array[n-1]);
+        super.println(map.applyAsInt(array[n-1]));
     }
     public void printArray(int[] array, java.util.function.IntUnaryOperator map){
-        this.printArray(array, map);
+        this.printArray(array, " ", map);
     }
 
     public void printArray(long[] array, String separator){
@@ -83,10 +83,10 @@ class ContestPrinter extends java.io.PrintWriter{
             super.print(map.applyAsLong(array[i]));
             super.print(separator);
         }
-        super.println(array[n-1]);
+        super.println(map.applyAsLong(array[n-1]));
     }
-    public void printArray(long[] array, java.util.function.IntUnaryOperator map){
-        this.printArray(array, map);
+    public void printArray(long[] array, java.util.function.LongUnaryOperator map){
+        this.printArray(array, " ", map);
     }
     
 }
