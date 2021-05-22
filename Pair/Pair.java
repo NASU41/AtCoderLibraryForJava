@@ -13,8 +13,9 @@ class Pair<S extends Comparable<S>, T extends Comparable<T>> implements Comparab
         return this.first.equals(otherPair.first) && this.second.equals(otherPair.second);
     }
     public int compareTo(Pair<S,T> another){
-        if(this.second.compareTo(another.second) == 0) return this.first.compareTo(another.first);
-        else return this.second.compareTo(another.second);
+        Comparator<Pair<S,T>> comp1 = Comparator.comparing(Pair::getFirst);
+        Comparator<Pair<S,T>> comp2 = comp1.thenComparing(Pair::getSecond);
+        return comp2.compare(this, another);
     }
     public int hashCode(){
         return first.hashCode() * 10007 + second.hashCode();
