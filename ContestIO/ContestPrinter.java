@@ -45,6 +45,10 @@ class ContestPrinter extends java.io.PrintWriter{
 
     public void printArray(int[] array, String separator){
         int n = array.length;
+        if(n==0){
+            super.println();
+            return;
+        }
         for(int i=0; i<n-1; i++){
             super.print(array[i]);
             super.print(separator);
@@ -56,6 +60,10 @@ class ContestPrinter extends java.io.PrintWriter{
     }
     public void printArray(int[] array, String separator, java.util.function.IntUnaryOperator map){
         int n = array.length;
+        if(n==0){
+            super.println();
+            return;
+        }
         for(int i=0; i<n-1; i++){
             super.print(map.applyAsInt(array[i]));
             super.print(separator);
@@ -68,6 +76,10 @@ class ContestPrinter extends java.io.PrintWriter{
 
     public void printArray(long[] array, String separator){
         int n = array.length;
+        if(n==0){
+            super.println();
+            return;
+        }
         for(int i=0; i<n-1; i++){
             super.print(array[i]);
             super.print(separator);
@@ -79,6 +91,10 @@ class ContestPrinter extends java.io.PrintWriter{
     }
     public void printArray(long[] array, String separator, java.util.function.LongUnaryOperator map){
         int n = array.length;
+        if(n==0){
+            super.println();
+            return;
+        }
         for(int i=0; i<n-1; i++){
             super.print(map.applyAsLong(array[i]));
             super.print(separator);
@@ -88,5 +104,34 @@ class ContestPrinter extends java.io.PrintWriter{
     public void printArray(long[] array, java.util.function.LongUnaryOperator map){
         this.printArray(array, " ", map);
     }
-    
+    public void printArray(Object[] array, String separator){
+        int n = array.length;
+        if(n==0){
+            super.println();
+            return;
+        }
+        for(int i=0; i<n-1; i++){
+            super.print(array[i]);
+            super.print(separator);
+        }
+        super.println(array[n-1]);
+    }
+    public void printArray(Object[] array){
+        this.printArray(array, " ");
+    }
+    public void printArray(Object[] array, String separator, java.util.function.UnaryOperator map){
+        int n = array.length;
+        if(n==0){
+            super.println();
+            return;
+        }
+        for(int i=0; i<n-1; i++){
+            super.print(map.apply(array[i]));
+            super.print(separator);
+        }
+        super.println(map.apply(array[n-1]));
+    }
+    public void printArray(Object[] array, java.util.function.UnaryOperator map){
+        this.printArray(array, " ", map);
+    }
 }
