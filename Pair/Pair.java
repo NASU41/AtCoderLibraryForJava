@@ -6,6 +6,8 @@ class Pair<S extends Comparable<S>, T extends Comparable<T>> implements Comparab
         first = s;
         second = t;
     }
+    public S getFirst(){return first;}
+    public T getSecond(){return second;}
     public boolean equals(Object another){
         if(this==another) return true;
         if(!(another instanceof Pair)) return false;
@@ -13,8 +15,8 @@ class Pair<S extends Comparable<S>, T extends Comparable<T>> implements Comparab
         return this.first.equals(otherPair.first) && this.second.equals(otherPair.second);
     }
     public int compareTo(Pair<S,T> another){
-        Comparator<Pair<S,T>> comp1 = Comparator.comparing(Pair::getFirst);
-        Comparator<Pair<S,T>> comp2 = comp1.thenComparing(Pair::getSecond);
+        java.util.Comparator<Pair<S,T>> comp1 = java.util.Comparator.comparing(Pair::getFirst);
+        java.util.Comparator<Pair<S,T>> comp2 = comp1.thenComparing(Pair::getSecond);
         return comp2.compare(this, another);
     }
     public int hashCode(){
