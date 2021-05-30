@@ -104,7 +104,7 @@ class ContestPrinter extends java.io.PrintWriter{
     public void printArray(long[] array, java.util.function.LongUnaryOperator map){
         this.printArray(array, " ", map);
     }
-    public void printArray(Object[] array, String separator){
+    public <T> void printArray(T[] array, String separator){
         int n = array.length;
         if(n==0){
             super.println();
@@ -116,10 +116,10 @@ class ContestPrinter extends java.io.PrintWriter{
         }
         super.println(array[n-1]);
     }
-    public void printArray(Object[] array){
+    public <T> void printArray(T[] array){
         this.printArray(array, " ");
     }
-    public void printArray(Object[] array, String separator, java.util.function.UnaryOperator map){
+    public <T> void printArray(T[] array, String separator, java.util.function.UnaryOperator<T> map){
         int n = array.length;
         if(n==0){
             super.println();
@@ -131,7 +131,7 @@ class ContestPrinter extends java.io.PrintWriter{
         }
         super.println(map.apply(array[n-1]));
     }
-    public void printArray(Object[] array, java.util.function.UnaryOperator map){
+    public <T> void printArray(T[] array, java.util.function.UnaryOperator<T> map){
         this.printArray(array, " ", map);
     }
 }
