@@ -30,11 +30,7 @@ class MathLib{
         }
         return r;
     }
-    public static long lcm(long a, long b){
-        a = java.lang.Math.abs(a);
-        b = java.lang.Math.abs(b);
-        return a / gcd(a,b) * b;
-    }
+
     public static long lcm(long... a){
         if(a.length == 0) return 0;
         long r = java.lang.Math.abs(a[0]);
