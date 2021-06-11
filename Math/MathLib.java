@@ -26,7 +26,10 @@ class MathLib{
         if(a.length == 0) return 0;
         long r = java.lang.Math.abs(a[0]);
         for(int i=1; i<a.length; i++){
-            r = inv_gcd(r, java.lang.Math.abs(a[i]))[0];
+            if(a[i]!=0) {
+                if(r==0) r = java.lang.Math.abs(a[i]);
+                else r = inv_gcd(r, java.lang.Math.abs(a[i]))[0];
+            }
         }
         return r;
     }
