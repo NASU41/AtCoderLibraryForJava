@@ -43,8 +43,14 @@ class ModIntFactory {
     private void prepareFactorial(int max){
         factorial.ensureCapacity(max+1);
         if(factorial.size()==0) factorial.add(1);
-        for(int i=factorial.size(); i<=max; i++){
-            factorial.add(ma.mul(factorial.get(i-1), i));
+        if (usesMontgomery) {
+            for(int i=factorial.size(); i<=max; i++){
+                factorial.add(ma.mul(factorial.get(i-1), maMontgomery.generate(i)));
+            }
+        } else {
+            for(int i=factorial.size(); i<=max; i++){
+                factorial.add(ma.mul(factorial.get(i-1), i));
+            }
         }
     }
 
@@ -77,8 +83,8 @@ class ModIntFactory {
             return mod;
         }
         public int value() {
-            if (ma instanceof ModArithmetic.ModArithmeticMontgomery) {
-                return ((ModArithmetic.ModArithmeticMontgomery) ma).reduce(value);
+            if (usesMontgomery) {
+                return maMontgomery.reduce(value);
             }
             return value;
         }
