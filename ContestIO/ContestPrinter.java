@@ -2,6 +2,9 @@ class ContestPrinter extends java.io.PrintWriter{
     public ContestPrinter(java.io.PrintStream stream){
         super(stream);
     }
+    public ContestPrinter(java.io.File file) throws java.io.FileNotFoundException{
+        super(new java.io.PrintStream(file));
+    }
     public ContestPrinter(){
         super(System.out);
     }

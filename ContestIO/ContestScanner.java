@@ -11,6 +11,9 @@ class ContestScanner {
     public ContestScanner(java.io.InputStream in){
         this.in = in;
     }
+    public ContestScanner(java.io.File file) throws java.io.FileNotFoundException {
+        this(new java.io.BufferedInputStream(new java.io.FileInputStream(file)));
+    }
     public ContestScanner(){
         this(System.in);
     }
