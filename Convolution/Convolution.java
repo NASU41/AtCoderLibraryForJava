@@ -125,7 +125,7 @@ class Convolution {
             ie = ie * ie % mod;
         }
         long now = 1;
-        for (int i = 0; i < cnt2 - 2; i++) {
+        for (int i = 0; i <= cnt2 - 2; i++) {
             sum_e[i] = es[i] * now % mod;
             now = now * ies[i] % mod;
         }
@@ -154,7 +154,7 @@ class Convolution {
             ie = ie * ie % mod;
         }
         long now = 1;
-        for (int i = 0; i < cnt2 - 2; i++) {
+        for (int i = 0; i <= cnt2 - 2; i++) {
             sum_ie[i] = ies[i] * now % mod;
             now = now * es[i] % mod;
         }
